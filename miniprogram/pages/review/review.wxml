@@ -1,0 +1,58 @@
+<view class="page-container review-page">
+  <!-- 打分模式 -->
+  <block wx:if="{{mode === 'write'}}">
+    <view class="glass-card fade-up">
+      <view class="review-target">为 <text class="review-target__name">{{revieweeName}}</text> 打分</view>
+      <view class="review-sub">评价将影响对方的信誉值、名望值与能力值</view>
+
+      <!-- 星级 -->
+      <view class="star-row">
+        <text wx:for="{{[1,2,3,4,5]}}" wx:for-item="lv" wx:key="*this"
+          class="star-item {{star >= lv ? 'star-item--on' : ''}}"
+          data-star="{{lv}}" bindtap="pickStar">★</text>
+      </view>
+
+      <!-- 维度（可选） -->
+      <view class="dims">
+        <view class="dim-row" wx:for="{{[['onTime','按时交付'],['quality','完成质量'],['attitude','沟通态度']]}}" wx:key="*this">
+          <text class="dim-row__label">{{item[1]}}</text>
+          <view class="dim-row__stars">
+            <text wx:for="{{[1,2,3,4,5]}}" wx:for-item="v" wx:key="*this"
+              class="dim-star {{dims[item[0]] >= v ? 'dim-star--on' : ''}}"
+              data-dim="{{item[0]}}" data-v="{{v}}" bindtap="pickDim">★</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 评论 -->
+      <textarea class="glass-input textarea" placeholder="说说这次合作体验（最多 300 字）"
+        placeholder-class="ph" maxlength="300" value="{{comment}}" bindinput="onCommentInput" auto-height />
+
+      <button class="pill-btn pill-btn--primary submit-btn {{submitting ? 'pill-btn--disabled' : ''}}"
+        hover-class="pill-btn--active" bindtap="submit">{{existingReview ? '修改评价' : '提交评价'}}</button>
+      <view class="review-tip">{{existingReview ? '本次修改后还可修改 ' + editLeft + ' 次' : '发布者可自主选择是否评价；评价提交后最多可修改 1 次'}}</view>
+    </view>
+  </block>
+
+  <!-- 我的评价 -->
+  <block wx:else>
+    <view class="glass-card fade-up" wx:for="{{list}}" wx:key="_id">
+      <view class="mine-item__top">
+        <view class="mine-item__name">{{item.reviewerName}}</view>
+        <view class="mine-item__stars">
+          <!-- 内层循环必须换变量名，避免遮蔽外层 item（评价对象） -->
+          <text wx:for="{{[1,2,3,4,5]}}" wx:for-item="lv" wx:key="*this"
+            class="star-item star-item--sm {{item.star >= lv ? 'star-item--on' : ''}}">★</text>
+        </view>
+      </view>
+      <view class="mine-item__dims" wx:if="{{item.dimsText}}">{{item.dimsText}}</view>
+      <view class="mine-item__comment" wx:if="{{item.comment}}">{{item.comment}}</view>
+      <view class="mine-item__bottom">
+        <text class="mine-item__time">{{item.timeText}}</text>
+        <text wx:if="{{item.appeal && item.appeal.status === 'open'}}" class="badge badge--gold">申诉处理中</text>
+        <text wx:elif="{{!item.appeal}}" class="appeal-link" data-id="{{item._id}}" bindtap="appeal">申诉</text>
+      </view>
+    </view>
+    <empty-state wx:if="{{!list.length && !loading}}" icon="🍃" text="还没有收到过评价" />
+  </block>
+</view>

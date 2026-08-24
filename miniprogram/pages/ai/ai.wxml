@@ -1,0 +1,76 @@
+<view class="page-container ai-page">
+  <!-- 月卡状态条 -->
+  <view class="glass-card fade-up pass-bar {{hasPass ? 'pass-bar--on' : ''}}">
+    <view class="pass-bar__icon">🤖</view>
+    <view class="pass-bar__body">
+      <view class="pass-bar__title">{{hasPass ? 'AI 月卡生效中' : 'AI 助手'}}</view>
+      <view class="pass-bar__text">{{passText}}</view>
+    </view>
+    <button class="pill-btn {{hasPass ? 'pill-btn--ghost' : 'pill-btn--gold'}} pill-btn--sm"
+      hover-class="pill-btn--active" bindtap="goShop">{{hasPass ? '续费' : '开月卡'}}</button>
+  </view>
+
+  <!-- 今日推荐 -->
+  <view class="glass-card fade-up stagger-1">
+    <view class="block-head">
+      <view>
+        <view class="block-title">今日推荐</view>
+        <view class="block-sub">AI 检索大厅，为你匹配最适合接下的委托{{remaining > 0 ? ' · 今日剩余 ' + remaining + ' 次' : ''}}</view>
+      </view>
+      <button class="pill-btn pill-btn--primary pill-btn--sm" hover-class="pill-btn--active"
+        bindtap="doRecommend" loading="{{recommendLoading}}">开始检索</button>
+    </view>
+
+    <!-- 推荐结果 -->
+    <view class="rec-list" wx:if="{{recommends.length}}">
+      <view
+        wx:for="{{recommends}}" wx:key="commissionId"
+        class="rec-card fade-up {{index < 6 ? 'stagger-' + (index + 1) : ''}}"
+        hover-class="rec-card--active" data-id="{{item.commissionId}}" bindtap="goDetail"
+      >
+        <view class="rec-card__top">
+          <view class="rec-card__title ellipsis">{{item.title}}</view>
+          <view class="rec-card__amount">{{item.amount}} {{item.currency === 'gold' ? '金' : '银'}}</view>
+        </view>
+        <view class="rec-card__meta">
+          <star-bar star="{{item.star}}" size="{{22}}" />
+          <text class="rec-card__no">{{item.commissionNo}}</text>
+        </view>
+        <view class="rec-card__reason">💡 {{item.reason}}</view>
+      </view>
+    </view>
+    <view class="rec-empty" wx:if="{{recommendMock && recommends.length}}">· 当前为模拟推荐（未配置 DEEPSEEK_API_KEY）·</view>
+  </view>
+
+  <!-- 委托方案 -->
+  <view class="glass-card fade-up stagger-2">
+    <view class="block-head">
+      <view>
+        <view class="block-title">委托解决方案</view>
+        <view class="block-sub">选择你的委托，AI 生成四段式完成方案（20 银/次，月卡免费）</view>
+      </view>
+    </view>
+
+    <!-- 选择委托 -->
+    <scroll-view scroll-x class="pick-scroll" enhanced show-scrollbar="{{false}}" wx:if="{{myCommissions.length}}">
+      <view class="pick-row">
+        <view
+          wx:for="{{myCommissions}}" wx:key="_id"
+          class="chip {{pickedIndex === index ? 'chip--on' : ''}}"
+          hover-class="chip--active" data-i="{{index}}" bindtap="pickCommission"
+        >{{item.title}}</view>
+      </view>
+    </scroll-view>
+    <view class="rec-empty" wx:else>暂无进行中的委托（发布委托后可生成方案）</view>
+
+    <button wx:if="{{myCommissions.length}}" class="pill-btn pill-btn--ghost solution-btn"
+      hover-class="pill-btn--active" bindtap="doSolution" loading="{{solutionLoading}}">
+      生成解决方案
+    </button>
+
+    <view class="solution-body" wx:if="{{solutionText}}">
+      <text class="solution-text" user-select>{{solutionText}}</text>
+      <view class="rec-empty" wx:if="{{solutionMock}}">· 模拟方案（未配置 DEEPSEEK_API_KEY）·</view>
+    </view>
+  </view>
+</view>

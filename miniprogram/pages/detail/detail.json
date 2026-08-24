@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "委托详情",
+  "usingComponents": {
+    "star-bar": "/components/star-bar/star-bar",
+    "status-badge": "/components/status-badge/status-badge",
+    "confirm-dialog": "/components/confirm-dialog/confirm-dialog"
+  }
+}

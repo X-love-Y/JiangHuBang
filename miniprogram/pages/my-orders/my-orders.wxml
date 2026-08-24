@@ -1,0 +1,46 @@
+<view class="page-container">
+  <!-- tabs -->
+  <view class="tabs glass fade-up">
+    <view class="tabs__item {{tab === 'published' ? 'tabs__item--on' : ''}}"
+      hover-class="tabs__item--active" data-tab="published" bindtap="switchTab">我发布的</view>
+    <view class="tabs__item {{tab === 'accepted' ? 'tabs__item--on' : ''}}"
+      hover-class="tabs__item--active" data-tab="accepted" bindtap="switchTab">我接的</view>
+  </view>
+
+  <!-- 状态筛选 -->
+  <scroll-view scroll-x class="status-scroll fade-up stagger-1" enhanced show-scrollbar="{{false}}">
+    <view class="status-row">
+      <view
+        wx:for="{{statuses}}" wx:key="value"
+        class="chip {{statusFilter === item.value ? 'chip--on' : ''}}"
+        hover-class="chip--active" data-value="{{item.value}}" bindtap="pickStatus"
+      >{{item.label}}</view>
+    </view>
+  </scroll-view>
+
+  <!-- 列表 -->
+  <view class="orders" wx:if="{{list.length}}">
+    <view
+      wx:for="{{list}}" wx:key="_id"
+      class="glass-card order-card fade-up {{index < 6 ? 'stagger-' + (index + 1) : ''}}"
+      hover-class="order-card--active"
+      data-id="{{item._id}}" bindtap="goDetail"
+    >
+      <view class="order-card__top">
+        <view class="order-card__title ellipsis">{{item.title}}</view>
+        <status-badge status="{{item.status}}" />
+      </view>
+      <view class="order-card__mid">
+        <star-bar star="{{item.star}}" size="{{24}}" />
+        <text class="order-card__amount">{{item.amountText}}</text>
+      </view>
+      <view class="order-card__bottom">
+        <text class="order-card__party">{{tab === 'accepted' ? '发布者' : '接单者'}}：{{item.other.nickname}}</text>
+        <text class="order-card__time">{{item.timeText}}</text>
+      </view>
+    </view>
+    <view class="list-footer" wx:if="{{!hasMore}}">— 江湖路远，且行且看 —</view>
+  </view>
+
+  <empty-state wx:if="{{!list.length && !loading}}" icon="🍂" text="{{emptyText}}" />
+</view>

@@ -1,0 +1,311 @@
+/* chat —— 聊天窗口（微信式输入栏：键盘/语音切换 + 表情 + 加号面板 + 小发送键） */
+page {
+  background: #F2F3F7;
+}
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.msg-scroll {
+  flex: 1;
+  height: 0;
+}
+.msg-list {
+  padding: 24rpx 28rpx 16rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+.msg-bottom {
+  height: 8rpx;
+}
+
+.msg-row {
+  display: flex;
+  gap: 16rpx;
+  align-items: flex-start;
+}
+.msg-row--mine {
+  flex-direction: row-reverse;
+}
+.msg-avatar {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.msg-avatar--placeholder {
+  background: linear-gradient(135deg, #D8DBE4, #C2C7D4);
+  color: #FFF;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.msg-bubble-wrap {
+  max-width: 72%;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.msg-row--mine .msg-bubble-wrap {
+  align-items: flex-end;
+}
+
+.msg-bubble {
+  background: #FFFFFF;
+  border-radius: 28rpx;
+  border-top-left-radius: 8rpx;
+  padding: 20rpx 26rpx;
+  font-size: 27rpx;
+  line-height: 1.6;
+  word-break: break-all;
+  box-shadow: 0 4rpx 14rpx rgba(31, 35, 55, 0.06);
+  white-space: pre-wrap;
+}
+.msg-row--mine .msg-bubble {
+  background: linear-gradient(135deg, #2A2A2E 0%, #1C1C1E 100%);
+  color: #FFF;
+  border-radius: 28rpx;
+  border-top-right-radius: 8rpx;
+}
+.msg-voice {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+.msg-bubble--voice {
+  min-width: 180rpx;
+  text-align: center;
+}
+.msg-voice-status {
+  color: var(--gold);
+  font-size: 22rpx;
+}
+.msg-voice-slider {
+  width: 100%;
+  padding: 0 8rpx;
+}
+.voice-slider {
+  margin: 0;
+}
+.msg-img {
+  max-width: 380rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 14rpx rgba(31, 35, 55, 0.08);
+}
+.msg-video-wrap {
+  width: 380rpx;
+}
+.msg-video {
+  width: 100%;
+  height: 440rpx;
+  border-radius: 20rpx;
+  background: #000;
+}
+.msg-time {
+  font-size: 20rpx;
+  color: var(--ink-3);
+  padding: 0 8rpx;
+}
+
+/* 录音状态条 */
+.record-tip {
+  position: fixed;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  background: rgba(28, 28, 30, 0.85);
+  border-radius: 24rpx;
+  padding: 28rpx 44rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+  z-index: 99;
+  backdrop-filter: blur(10rpx);
+}
+.record-tip__wave {
+  color: #FFF;
+  font-size: 25rpx;
+  letter-spacing: 1rpx;
+}
+.record-tip__mic {
+  font-size: 52rpx;
+}
+
+/* 展开面板 */
+.panel {
+  height: 340rpx;
+  background: rgba(255, 255, 255, 0.96);
+  border-top: 1rpx solid rgba(28, 28, 30, 0.06);
+  flex-shrink: 0;
+}
+.panel__scroll {
+  height: 100%;
+}
+.emoji-grid {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20rpx 16rpx;
+}
+.emoji-item {
+  width: 12.5%;
+  height: 90rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52rpx;
+  transition: transform 100ms;
+}
+.emoji-item--active {
+  transform: scale(1.15);
+}
+.plus-grid {
+  display: flex;
+  gap: 20rpx;
+  padding: 40rpx 32rpx;
+}
+.plus-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  transition: transform 120ms var(--ease-out);
+}
+.plus-item--active {
+  transform: scale(0.93);
+}
+.plus-item__icon {
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 28rpx;
+  background: rgba(28, 28, 30, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+}
+.plus-item__label {
+  font-size: 23rpx;
+  color: var(--ink-2);
+}
+
+/* 输入栏（微信式布局） */
+.input-bar {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 14rpx 20rpx calc(14rpx + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
+  border-top: 1rpx solid rgba(28, 28, 30, 0.06);
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+.input-bar__btn {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: rgba(28, 28, 30, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  flex-shrink: 0;
+  transition: transform 120ms var(--ease-out);
+}
+.input-bar__btn--active {
+  transform: scale(0.9);
+}
+.input-bar__input {
+  flex: 1;
+  min-width: 0;
+  height: 72rpx;
+  line-height: 72rpx;
+  background: rgba(28, 28, 30, 0.05);
+  border-radius: var(--radius-pill);
+  padding: 0 28rpx;
+  font-size: 27rpx;
+  box-sizing: border-box;
+}
+/* 语音按钮：占据输入框位置 */
+.input-bar__voice {
+  flex: 1;
+  min-width: 0;
+  height: 72rpx;
+  line-height: 72rpx;
+  text-align: center;
+  background: rgba(28, 28, 30, 0.06);
+  border-radius: var(--radius-pill);
+  font-size: 27rpx;
+  color: var(--ink-2);
+  user-select: none;
+}
+.input-bar__voice--cancel {
+  background: rgba(217, 83, 79, 0.14);
+  color: var(--danger);
+}
+.input-bar__send {
+  height: 68rpx;
+  line-height: 68rpx;
+  padding: 0 26rpx;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #2A2A2E 0%, #1C1C1E 100%);
+  color: #FFF;
+  font-size: 25rpx;
+  flex-shrink: 0;
+  transition: transform 120ms var(--ease-out);
+}
+.input-bar__send--disabled {
+  opacity: 0.45;
+}
+.input-bar__send--active {
+  transform: scale(0.95);
+}
+.ph {
+  color: var(--ink-3);
+}
+
+/* 图片发送确认浮层 */
+.img-confirm {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 28, 30, 0.92);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+}
+.img-confirm__img {
+  flex: 1;
+  width: 100%;
+  height: 0;
+}
+.img-confirm__bar {
+  display: flex;
+  gap: 28rpx;
+  padding: 30rpx 40rpx calc(30rpx + env(safe-area-inset-bottom));
+}
+.img-confirm__btn {
+  flex: 1;
+  text-align: center;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.16);
+  color: #FFF;
+  font-size: 28rpx;
+  transition: transform 120ms var(--ease-out);
+}
+.img-confirm__btn--primary {
+  background: linear-gradient(135deg, #3BA55D 0%, #2E8B4C 100%);
+  font-weight: 700;
+}
+.img-confirm__btn--active {
+  transform: scale(0.95);
+}

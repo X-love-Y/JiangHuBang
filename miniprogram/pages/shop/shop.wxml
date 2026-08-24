@@ -1,0 +1,68 @@
+<view class="page-container shop-page">
+  <!-- 余额条 -->
+  <view class="gold-bar glass fade-up">
+    <view class="coin coin--sm coin--gold"></view>
+    <text class="gold-bar__num">{{user.gold}}</text>
+    <text class="gold-bar__label">黄金可用 · 商城仅支持黄金购买</text>
+    <text class="gold-bar__hint">1金=100银，钱包可兑换</text>
+  </view>
+
+  <!-- tabs -->
+  <view class="tabs glass fade-up stagger-1">
+    <view class="tabs__item {{tab === 'title' ? 'tabs__item--on' : ''}}"
+      hover-class="tabs__item--active" data-tab="title" bindtap="switchTab">🏅 称号</view>
+    <view class="tabs__item {{tab === 'item' ? 'tabs__item--on' : ''}}"
+      hover-class="tabs__item--active" data-tab="item" bindtap="switchTab">🎁 道具</view>
+  </view>
+
+  <!-- 商品列表 -->
+  <view class="goods">
+    <block wx:for="{{items}}" wx:key="itemId">
+      <view wx:if="{{item.type === tab || (tab === 'item' && item.type !== 'title')}}"
+        class="glass-card goods-card fade-up {{index < 6 ? 'stagger-' + (index + 1) : ''}} {{!item.unlocked ? 'goods-card--locked' : ''}}">
+        <view class="goods-card__top">
+          <view class="goods-card__icon-wrap">
+            <text class="goods-card__icon">{{item.icon}}</text>
+          </view>
+          <view class="goods-card__info">
+            <view class="goods-card__name">{{item.name}}</view>
+            <view class="goods-card__desc">{{item.desc}}</view>
+          </view>
+          <view class="goods-card__price">
+            <text class="goods-card__price-num">{{item.price}}</text>
+            <text class="goods-card__price-unit">金</text>
+          </view>
+        </view>
+        <view class="goods-card__effects" wx:if="{{item.effects.length}}">
+          <text wx:for="{{item.effects}}" wx:key="*this" class="badge badge--gold goods-card__effect">{{item}}</text>
+        </view>
+        <view class="goods-card__bottom">
+          <text class="goods-card__unlock {{item.unlocked ? '' : 'goods-card__unlock--need'}}">
+            {{item.unlockText || '无解锁条件'}}
+          </text>
+          <view class="goods-card__action">
+            <text wx:if="{{item.owned && (item.type === 'title' || item.type === 'card')}}"
+              class="badge badge--success">已拥有</text>
+            <text wx:elif="{{item.bagCount > 0}}" class="badge badge--ink">背包 ×{{item.bagCount}}</text>
+            <button wx:else class="pill-btn {{item.unlocked ? 'pill-btn--gold' : 'pill-btn--ghost'}} pill-btn--sm"
+              hover-class="pill-btn--active" data-id="{{item.itemId}}" bindtap="askBuy">
+              {{item.unlocked ? '购买' : '未解锁'}}
+            </button>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="shop-footer">完成更多委托可解锁高级称号</view>
+</view>
+
+<!-- 购买确认 -->
+<confirm-dialog
+  show="{{dialog.show}}"
+  title="确认购买"
+  content="{{dialog.content}}"
+  confirmText="黄金购买"
+  bind:confirm="onDialogConfirm"
+  bind:cancel="onDialogCancel"
+/>

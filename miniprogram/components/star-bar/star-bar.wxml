@@ -1,0 +1,8 @@
+<view class="star-bar" aria-label="{{star}}星委托">
+  <view
+    wx:for="{{stars}}"
+    wx:key="*this"
+    class="star {{item <= star ? 'star--on' : ''}}"
+    style="width: {{size}}rpx; height: {{size}}rpx; font-size: {{size}}rpx;"
+  >★</view>
+</view>

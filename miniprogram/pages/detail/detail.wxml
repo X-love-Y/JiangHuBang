@@ -1,0 +1,304 @@
+<view class="page-container detail-page" wx:if="{{c}}">
+  <!-- 头部大卡 -->
+  <view class="glass-card fade-up head-card">
+    <view class="head-card__row1">
+      <status-badge status="{{displayStatus}}" />
+      <text class="head-card__no">{{c.commissionNo}}</text>
+    </view>    <view class="head-card__title">{{c.title}}</view>
+    <view class="head-card__meta">
+      <star-bar star="{{c.star}}" size="{{32}}" />
+      <text class="badge badge--ink">{{c.catIcon}} {{c.catName}}</text>
+    </view>
+    <view class="head-card__amount">
+      <text class="head-card__num">{{c.amountText}}</text>
+      <text class="head-card__fee">平台中介费 1%</text>
+    </view>
+    <view class="head-card__info">
+      <text>📍 {{c.regionText}}</text>
+      <text>🕐 截止 {{c.deadlineText || '未设定'}}</text>
+    </view>
+  </view>
+
+  <!-- 已结束提示横幅 -->
+  <view class="closed-notice fade-up" wx:if="{{displayStatus === 'cancelled' || displayStatus === 'expired'}}">
+    {{displayStatus === 'cancelled' ? '🚫 该委托已取消' : '⏰ 该委托已截止'}}{{c.cancelReason ? '：' + c.cancelReason : ''}}，无法接取
+  </view>
+
+  <!-- 发布者卡（点击进个人主页） -->
+  <view class="glass-card fade-up stagger-1 party-card" hover-class="party-card--active" bindtap="goPublisherHome">
+    <view class="party-card__avatar-wrap">
+      <image wx:if="{{c.publisher.avatarUrl}}" class="party-card__avatar" src="{{cloudUrl(c.publisher.avatarUrl)}}" mode="aspectFill" />
+      <view wx:else class="party-card__avatar party-card__avatar--placeholder">{{c.publisher.nickname[0]}}</view>
+    </view>
+    <view class="party-card__info">
+      <view class="party-card__name">{{c.publisher.nickname}}</view>
+      <view class="party-card__bio" wx:if="{{c.publisher.bio}}">{{c.publisher.bio}}</view>
+    </view>
+    <text class="badge badge--gold">发布者</text>
+  </view>
+
+  <!-- 描述 -->
+  <view class="glass-card fade-up stagger-2" wx:if="{{c.description}}">
+    <view class="section-label">委托描述</view>
+    <view class="desc-text">{{c.description}}</view>
+  </view>
+
+  <!-- 图片 -->
+  <view class="glass-card fade-up stagger-2" wx:if="{{c.images.length}}">
+    <view class="section-label">相关图片</view>
+    <view class="img-grid">
+      <image wx:for="{{c.images}}" wx:key="*this" class="img-cell" src="{{cloudUrl(item)}}" mode="aspectFill"
+        data-i="{{index}}" bindtap="previewImages" />
+    </view>
+  </view>
+
+  <!-- AI 方案卡 -->
+  <view class="glass-card fade-up stagger-3 ai-card">
+    <view class="ai-card__head">
+      <view class="section-label">🤖 AI 解决方案</view>
+      <button class="pill-btn pill-btn--ghost pill-btn--sm" hover-class="pill-btn--active"
+        bindtap="askAI" loading="{{aiLoading}}">{{aiSolution ? '重新生成' : '生成方案'}}</button>
+    </view>
+    <view class="ai-card__body" wx:if="{{aiSolution}}">
+      <text class="ai-card__text" user-select>{{aiSolution}}</text>
+      <view class="ai-card__mock" wx:if="{{aiMock}}">· 模拟方案（接入 DeepSeek 后返回真实分析）·</view>
+    </view>
+    <view class="ai-card__empty" wx:else>AI 将为你拆解任务：背景分析 / 执行步骤 / 风险提示 / 成本预估</view>
+  </view>
+
+  <!-- 完成凭证 -->
+  <view class="glass-card fade-up stagger-3" wx:if="{{c.proofText || c.proofImages.length}}">
+    <view class="section-label">完成凭证</view>
+    <view class="desc-text" wx:if="{{c.proofText}}">{{c.proofText}}</view>
+    <view class="img-grid" wx:if="{{c.proofImages.length}}">
+      <image wx:for="{{c.proofImages}}" wx:key="*this" class="img-cell" src="{{cloudUrl(item)}}" mode="aspectFill"
+        data-i="{{index}}" bindtap="previewProofs" />
+    </view>
+  </view>
+
+  <!-- 结算信息（扁平字段） -->
+  <view class="glass-card fade-up stagger-3 settle-card" wx:if="{{c.settleNet !== undefined}}">
+    <view class="settle-card__row">
+      <text>委托金额</text><text>{{c.amountText}}</text>
+    </view>
+    <view class="settle-card__row">
+      <text>平台中介费（{{c.settleDiscount < 1 ? '称号折扣后' : ''}}）</text>
+      <text>{{c.settleFee}} {{c.currency === 'gold' ? '金' : '银'}}</text>
+    </view>
+    <view class="settle-card__row settle-card__row--net">
+      <text>完成者实得</text><text>{{c.settleNet}} {{c.currency === 'gold' ? '金' : '银'}}</text>
+    </view>
+  </view>
+
+  <!-- 时间线 -->
+  <view class="glass-card fade-up stagger-4">
+    <view class="section-label">江湖进程</view>
+    <view class="timeline">
+      <view wx:for="{{timeline}}" wx:key="label" class="timeline__item">
+        <view class="timeline__dot {{item.done ? 'timeline__dot--on' : ''}} {{item.end && !item.done ? 'timeline__dot--end' : ''}}"></view>
+        <view class="timeline__body">
+          <view class="timeline__label {{item.done ? '' : 'timeline__label--pending'}}">{{item.label}}</view>
+          <view class="timeline__time" wx:if="{{item.time}}">{{item.time}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 等待提示 -->
+  <view class="glass-card fade-up stagger-4 wait-card" wx:if="{{c.status === 'submitted' && isAcceptor}}">
+    ⏳ 已提交凭证，等待发布者确认。发布者 48 小时未确认将自动结算。
+  </view>
+
+  <!-- ===== 公共模式区块 ===== -->
+  <block wx:if="{{c.mode === 'public'}}">
+    <!-- 招募信息 -->
+    <view class="glass-card fade-up stagger-3 public-info">
+      <view class="public-info__row">
+        <text class="badge badge--info">👥 公共模式</text>
+        <text class="public-info__text">目标 {{c.minAcceptors}}-{{c.maxAcceptors}} 人 · 已申请 {{pendingCount}} 人</text>
+        <text class="public-info__text">{{c.splitMode === 'custom' ? '自定义比例' : '赏金均分'}}</text>
+      </view>
+      <view class="public-info__mine" wx:if="{{myRequestStatus}}">
+        <text class="badge {{myRequestStatus === 'approved' ? 'badge--success' : myRequestStatus === 'rejected' ? 'badge--ink' : 'badge--gold'}}">
+          我的申请：{{myRequestStatus === 'pending' ? '待审核' : myRequestStatus === 'approved' ? '已选定' : myRequestStatus === 'rejected' ? '未通过' : '已撤销'}}
+        </text>
+      </view>
+    </view>
+
+    <!-- 发布者管理面板（招募中） -->
+    <view class="glass-card fade-up stagger-3" wx:if="{{isPublisher && c.status === 'pending'}}">
+      <view class="section-label">📋 申请人管理</view>
+      <view class="applicant" wx:for="{{requests}}" wx:key="userId">
+        <view class="applicant__avatar-wrap">
+          <image wx:if="{{item.avatarUrl}}" class="applicant__avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+          <view wx:else class="applicant__avatar applicant__avatar--placeholder">{{item.nickname[0]}}</view>
+        </view>
+        <view class="applicant__body">
+          <view class="applicant__name">{{item.nickname}}</view>
+          <view class="applicant__msg" wx:if="{{item.message}}">「{{item.message}}」</view>
+          <view class="applicant__time">{{item.timeText}}</view>
+        </view>
+        <view class="applicant__actions" wx:if="{{item.status === 'pending'}}">
+          <button class="pill-btn pill-btn--primary" hover-class="pill-btn--active"
+            data-user="{{item.userId}}" bindtap="doApprove">选定</button>
+          <button class="pill-btn pill-btn--ghost" hover-class="pill-btn--active"
+            data-user="{{item.userId}}" bindtap="doReject">婉拒</button>
+        </view>
+        <view class="applicant__approved" wx:elif="{{item.status === 'approved'}}">
+          <text class="badge badge--success">已选定
+            <text wx:if="{{c.splitMode === 'custom' && item.split}}"> {{item.split}}%</text>
+          </text>
+          <view wx:if="{{c.splitMode === 'custom'}}" class="split-edit-btn"
+            hover-class="split-edit-btn--active"
+            data-user="{{item.userId}}" data-split="{{item.split}}" bindtap="doChangeSplit">✎ 改比例</view>
+        </view>
+        <text wx:else class="badge badge--ink">{{item.status === 'rejected' ? '已婉拒' : '已撤销'}}</text>
+      </view>
+      <view class="applicant-empty" wx:if="{{!requests.length}}">还没有人申请，等待侠士出现…</view>
+      <button class="pill-btn pill-btn--primary commit-btn {{c.acceptors.length < c.minAcceptors ? 'pill-btn--disabled' : ''}}"
+        hover-class="pill-btn--active" bindtap="doCommit">
+        开始合作（已选定 {{c.acceptors.length}}/{{c.minAcceptors}} 人）
+      </button>
+    </view>
+
+    <!-- 合作者进度 -->
+    <view class="glass-card fade-up stagger-3" wx:if="{{c.acceptors.length && (c.status === 'accepted' || c.status === 'submitted')}}">
+      <view class="section-label">🤝 合作进度（{{c.acceptors.length}} 人）</view>
+      <view class="cooperator" wx:for="{{c.acceptors}}" wx:key="userId">
+        <view class="cooperator__avatar-wrap">
+          <image wx:if="{{item.avatarUrl}}" class="cooperator__avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+          <view wx:else class="cooperator__avatar cooperator__avatar--placeholder">{{item.nickname[0]}}</view>
+        </view>
+        <view class="cooperator__body">
+          <view class="cooperator__name">{{item.nickname}}
+            <text wx:if="{{c.splitMode === 'custom' && item.split}}" class="badge badge--gold">比例 {{item.split}}%</text>
+            <view wx:if="{{isPublisher && c.splitMode === 'custom'}}" class="split-edit-btn split-edit-btn--inline"
+              hover-class="split-edit-btn--active"
+              data-user="{{item.userId}}" data-split="{{item.split}}" bindtap="doChangeSplit">✎ 改比例</view>
+          </view>
+          <view class="cooperator__status">
+            <text class="badge {{item.submittedAt ? 'badge--success' : 'badge--cinnabar'}}">
+              {{item.submittedAt ? '已提交凭证' : '未提交'}}
+            </text>
+            <text wx:if="{{item.confirmedByPublisher}}" class="badge badge--success">已确认</text>
+          </view>
+          <!-- 凭证查看入口 + 展开详情 -->
+          <view class="cooperator__proof-link"
+            wx:if="{{item.submittedAt && (item.proofText || item.proofImages.length)}}"
+            hover-class="cooperator__proof-link--active"
+            data-i="{{index}}" bindtap="toggleAcceptorProof">
+            📎 查看凭证 {{expandedAcceptorIdx === index ? '▲' : '▼'}}
+          </view>
+          <view class="cooperator__proof-detail" wx:if="{{expandedAcceptorIdx === index}}">
+            <view class="cooperator__proof-text" wx:if="{{item.proofText}}" user-select>{{item.proofText}}</view>
+            <view class="img-grid img-grid--sm" wx:if="{{item.proofImages.length}}">
+              <image wx:for="{{item.proofImages}}" wx:for-item="img" wx:key="*this"
+                class="img-cell img-cell--sm" src="{{cloudUrl(img)}}" mode="aspectFill"
+                data-ai="{{index}}" data-img="{{img}}" bindtap="previewAcceptorProof" />
+            </view>
+          </view>
+        </view>
+        <button wx:if="{{isPublisher && c.status === 'submitted' && !item.confirmedByPublisher}}"
+          class="pill-btn pill-btn--primary pill-btn--sm" hover-class="pill-btn--active"
+          data-user="{{item.userId}}" bindtap="doConfirmAcceptor">确认</button>
+      </view>
+      <button wx:if="{{isPublisher && c.status === 'submitted'}}"
+        class="pill-btn pill-btn--primary commit-btn" hover-class="pill-btn--active" bindtap="doConfirmAll">
+        全部确认并结算
+      </button>
+    </view>
+  </block>
+
+  <!-- 凭证编辑器 -->
+  <view class="glass-card fade-up proof-editor" wx:if="{{proofEditorOpen}}">
+    <view class="section-label">提交完成凭证</view>
+    <textarea class="glass-input textarea" placeholder="说明完成情况（做了什么、结果如何）…"
+      placeholder-class="ph" maxlength="500" value="{{proofText}}" bindinput="onProofInput" auto-height />
+    <view class="img-grid">
+      <view wx:for="{{proofImages}}" wx:key="*this" class="img-cell">
+        <image src="{{item}}" mode="aspectFill" data-i="{{index}}" bindtap="previewProofImage" />
+        <view class="img-cell__del" data-i="{{index}}" catchtap="removeProofImage">✕</view>
+      </view>
+      <view class="img-cell img-cell--add" hover-class="img-cell--active" wx:if="{{proofImages.length < 9}}" bindtap="chooseProofImages">
+        <text class="img-add-plus">＋</text>
+      </view>
+    </view>
+    <view class="proof-editor__actions">
+      <button class="pill-btn pill-btn--ghost" hover-class="pill-btn--active" bindtap="closeProofEditor">取消</button>
+      <button class="pill-btn pill-btn--primary" hover-class="pill-btn--active" bindtap="submitProof">提交凭证</button>
+    </view>
+  </view>
+
+  <!-- 底部操作区 -->
+  <view class="action-bar fade-up stagger-5">
+    <!-- 发布者道具 -->
+    <view class="action-items" wx:if="{{isPublisher && (c.status === 'pending' || c.status === 'accepted') && myBag.length}}">
+      <view wx:for="{{myBag}}" wx:key="itemId" class="chip"
+        hover-class="chip--active" data-item="{{item.itemId}}" bindtap="useItem">
+        {{item.itemId === 'trumpet' ? '📣 喇叭' : item.itemId === 'boost24' ? '📌 置顶' : '📨 推送'}} ×{{item.remaining}}
+      </view>
+    </view>
+
+    <view class="action-btns">
+      <!-- 公共模式：路人申请 -->
+      <button wx:if="{{c.mode === 'public' && c.status === 'pending' && !isPublisher && !myRequestStatus && !isExpired}}"
+        class="pill-btn pill-btn--primary" hover-class="pill-btn--active" bindtap="askApply">申请合作</button>
+      <button wx:if="{{c.mode === 'public' && c.status === 'pending' && !isPublisher && myRequestStatus === 'pending'}}"
+        class="pill-btn pill-btn--ghost" hover-class="pill-btn--active" bindtap="doWithdraw">撤销申请</button>
+
+      <!-- 私人模式：路人接单（已截止不可接） -->
+      <button wx:if="{{c.mode !== 'public' && c.status === 'pending' && !isPublisher && !isAcceptor && !isExpired}}"
+        class="pill-btn pill-btn--primary" hover-class="pill-btn--active" bindtap="askAccept">接下委托</button>
+
+      <!-- 合作者/接单者：提交凭证 -->
+      <button wx:if="{{c.status === 'accepted' && (isAcceptor || myAcceptorIdx >= 0) && !proofEditorOpen}}"
+        class="pill-btn pill-btn--primary" hover-class="pill-btn--active" bindtap="openProofEditor">提交完成凭证</button>
+
+      <!-- 客服会话（双方关系成立后可见） -->
+      <button wx:if="{{(isAcceptor || myAcceptorIdx >= 0 || isPublisher) && (c.status === 'accepted' || c.status === 'submitted' || c.status === 'settled')}}"
+        class="pill-btn pill-btn--ghost" hover-class="pill-btn--active" bindtap="goChat">💬 客服会话</button>
+
+      <!-- 私人模式：放弃 -->
+      <button wx:if="{{c.mode !== 'public' && c.status === 'accepted' && isAcceptor}}"
+        class="pill-btn pill-btn--ghost" hover-class="pill-btn--active" bindtap="askGiveUp">放弃委托</button>
+
+      <!-- 发布者：取消（待接单/进行中/定时待发均可取消） -->
+      <button wx:if="{{(c.status === 'pending' || c.status === 'accepted' || c.status === 'scheduled') && isPublisher}}"
+        class="pill-btn pill-btn--danger" hover-class="pill-btn--active" bindtap="askCancel">取消委托</button>
+
+      <!-- 私人模式：发布者确认完成 -->
+      <button wx:if="{{c.mode !== 'public' && c.status === 'submitted' && isPublisher}}"
+        class="pill-btn pill-btn--primary" hover-class="pill-btn--active" bindtap="askConfirm">确认完成并结算</button>
+
+      <!-- 结算完成 -->
+      <view wx:if="{{c.status === 'settled'}}" class="settled-hint">✓ 委托已结算，赏金已交付</view>
+    </view>
+
+    <!-- 结算后：发布者评价（整行按钮，不被挤压） -->
+    <view class="review-btns">
+      <button wx:if="{{c.mode !== 'public' && c.status === 'settled' && isPublisher && c.acceptor && !c.ratedByPublisher}}"
+        class="pill-btn pill-btn--ghost" hover-class="pill-btn--active"
+        data-user="{{c.acceptorId}}" data-name="{{c.acceptor.nickname}}" bindtap="goReview">⭐ 评价完成者</button>
+      <view wx:if="{{c.mode !== 'public' && c.status === 'settled' && isPublisher && c.acceptor && c.ratedByPublisher}}"
+        class="review-done">✓ 已完成评价</view>
+      <block wx:if="{{c.mode === 'public' && c.status === 'settled' && isPublisher}}">
+        <button wx:for="{{c.acceptors}}" wx:key="userId" wx:if="{{!item.rated}}"
+          class="pill-btn pill-btn--ghost" hover-class="pill-btn--active"
+          data-user="{{item.userId}}" data-name="{{item.nickname}}" bindtap="goReview">⭐ 评价 {{item.nickname}}</button>
+        <view wx:for="{{c.acceptors}}" wx:key="userId" wx:if="{{item.rated}}"
+          class="review-done">✓ 已完成对 {{item.nickname}} 的评价</view>
+      </block>
+    </view>
+  </view>
+</view>
+
+<!-- 通用确认弹窗 -->
+<confirm-dialog
+  show="{{dialog.show}}"
+  title="{{dialog.title}}"
+  content="{{dialog.content}}"
+  confirmText="{{dialog.confirmText}}"
+  danger="{{dialog.danger}}"
+  bind:confirm="onDialogConfirm"
+  bind:cancel="onDialogCancel"
+/>

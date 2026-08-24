@@ -1,0 +1,110 @@
+<view class="chat-page">
+  <!-- 消息流 -->
+  <scroll-view scroll-y class="msg-scroll" scroll-with-animation scroll-into-view="{{lastMsgId}}"
+    bindscroll="onScroll">
+    <view class="msg-list">
+      <view wx:for="{{messages}}" wx:key="_id" id="msg-{{item._id}}"
+        class="msg-row {{item.mine ? 'msg-row--mine' : ''}}">
+        <view class="msg-avatar-wrap" wx:if="{{!item.mine}}">
+          <image wx:if="{{item.avatarUrl}}" class="msg-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+          <view wx:else class="msg-avatar msg-avatar--placeholder">{{item.name[0]}}</view>
+        </view>
+        <view class="msg-bubble-wrap">
+          <view class="msg-bubble" wx:if="{{item.type === 'text'}}" user-select>{{item.text}}</view>
+          <image wx:if="{{item.type === 'image'}}" class="msg-img" src="{{item.mediaUrl}}" mode="widthFix"
+            data-url="{{item.mediaUrl}}" bindtap="previewMsgImage" />
+          <view wx:if="{{item.type === 'voice'}}" class="msg-voice">
+            <view class="msg-bubble msg-bubble--voice"
+              data-url="{{item.mediaUrl}}" data-file="{{item.fileId}}" data-id="{{item._id}}"
+              bindtap="onVoiceTap" bindlongpress="onVoiceLongPress">
+              🔊 {{item.duration}}"
+              <text wx:if="{{item.voiceStatus === 'playing'}}" class="msg-voice-status"> 播放中…</text>
+              <text wx:elif="{{item.voiceStatus === 'paused'}}" class="msg-voice-status"> 已暂停</text>
+            </view>
+            <!-- 播放进度条（当前语音消息专属） -->
+            <view class="msg-voice-slider" wx:if="{{item.voiceStatus}}">
+              <slider class="voice-slider" min="0" max="{{item.voiceDuration || 1}}" value="{{item.voiceCurrent}}"
+                block-size="14" activeColor="#C9A227" backgroundColor="rgba(28,28,30,0.12)"
+                bindchanging="onVoiceSeeking" bindchange="onVoiceSeek" />
+            </view>
+          </view>
+          <view class="msg-video-wrap" wx:if="{{item.type === 'video'}}">
+            <video class="msg-video" src="{{item.mediaUrl}}" controls object-fit="cover" show-center-play-btn></video>
+          </view>
+          <view class="msg-time">{{item.timeText}}</view>
+        </view>
+      </view>
+      <view id="msg-bottom" class="msg-bottom"></view>
+    </view>
+  </scroll-view>
+
+  <!-- 录音状态提示条 -->
+  <view class="record-tip" wx:if="{{recording}}">
+    <view class="record-tip__wave">{{willCancel ? '松开手指，取消发送' : '上滑取消发送'}}</view>
+    <view class="record-tip__mic">🎙️</view>
+  </view>
+
+  <!-- 展开面板（表情 / 加号） -->
+  <view class="panel" wx:if="{{showPanel}}">
+    <!-- 表情面板 -->
+    <scroll-view scroll-y class="panel__scroll" wx:if="{{showPanel === 'emoji'}}">
+      <view class="emoji-grid">
+        <view wx:for="{{emojis}}" wx:key="*this" class="emoji-item"
+          hover-class="emoji-item--active" data-emoji="{{item}}" bindtap="tapEmoji">{{item}}</view>
+      </view>
+    </scroll-view>
+    <!-- 加号面板 -->
+    <view class="plus-grid" wx:if="{{showPanel === 'plus'}}">
+      <view class="plus-item" hover-class="plus-item--active" bindtap="chooseImage">
+        <view class="plus-item__icon">🖼️</view>
+        <view class="plus-item__label">相册</view>
+      </view>
+      <view class="plus-item" hover-class="plus-item--active" bindtap="chooseImage">
+        <view class="plus-item__icon">📷</view>
+        <view class="plus-item__label">拍照</view>
+      </view>
+      <view class="plus-item" hover-class="plus-item--active" bindtap="chooseVideo">
+        <view class="plus-item__icon">🎬</view>
+        <view class="plus-item__label">短视频</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 输入栏 -->
+  <view class="input-bar">
+    <!-- 键盘/语音切换 -->
+    <view class="input-bar__btn" hover-class="input-bar__btn--active" bindtap="toggleInputMode">
+      {{inputMode === 'text' ? '🎤' : '⌨️'}}
+    </view>
+
+    <!-- 文字输入 -->
+    <input wx:if="{{inputMode === 'text'}}" class="input-bar__input" placeholder="输入消息…"
+      placeholder-class="ph" value="{{inputText}}" bindinput="onInput"
+      confirm-type="send" bindconfirm="sendText" cursor-spacing="20" />
+
+    <!-- 语音：按住说话（上滑取消） -->
+    <view wx:else class="input-bar__voice {{willCancel ? 'input-bar__voice--cancel' : ''}}"
+      bindtouchstart="onRecordStart" bindtouchmove="onRecordMove" bindtouchend="onRecordEnd" bindtouchcancel="onRecordEnd">
+      {{willCancel ? '松开取消' : '按住说话'}}
+    </view>
+
+    <!-- 表情 -->
+    <view class="input-bar__btn" hover-class="input-bar__btn--active"
+      data-panel="emoji" bindtap="togglePanel">😊</view>
+    <!-- 加号 -->
+    <view class="input-bar__btn" hover-class="input-bar__btn--active"
+      data-panel="plus" bindtap="togglePanel">＋</view>
+    <!-- 小发送键 -->
+    <view class="input-bar__send {{inputText ? '' : 'input-bar__send--disabled'}}"
+      hover-class="input-bar__send--active" bindtap="sendText">发送</view>
+  </view>
+
+  <!-- 图片发送确认浮层 -->
+  <view class="img-confirm" wx:if="{{pendingImagePreview}}" catchtouchmove="noop">
+    <image class="img-confirm__img" src="{{pendingImage}}" mode="aspectFit" />
+    <view class="img-confirm__bar">
+      <view class="img-confirm__btn" hover-class="img-confirm__btn--active" bindtap="cancelPendingImage">取消</view>
+      <view class="img-confirm__btn img-confirm__btn--primary" hover-class="img-confirm__btn--active" bindtap="confirmPendingImage">发送</view>
+    </view>
+  </view>
+</view>

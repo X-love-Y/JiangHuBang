@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "草稿箱",
+  "usingComponents": {
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

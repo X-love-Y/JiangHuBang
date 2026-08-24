@@ -1,0 +1,47 @@
+<view class="page-container register-page">
+  <!-- 标题区 -->
+  <view class="register-head fade-up">
+    <view class="register-head__title">{{title}}</view>
+    <view class="register-head__sub">{{subtitle}}</view>
+  </view>
+
+  <!-- 表单卡 -->
+  <view class="glass-card fade-up stagger-1 form-card">
+    <view class="field">
+      <view class="field__label">账号 ID</view>
+      <input class="glass-input" placeholder="4-16 位字母或数字" placeholder-class="ph"
+        maxlength="16" value="{{userId}}" bindinput="onIdInput" />
+      <view class="field__hint {{userId && idOk ? 'field__hint--ok' : ''}}" wx:if="{{userId}}">
+        {{idOk ? '✓ ID 可用' : 'ID 需 4-16 位字母或数字'}}
+      </view>
+    </view>
+
+    <view class="field">
+      <view class="field__label">密码</view>
+      <input class="glass-input" password placeholder="6-20 位，含字母和数字" placeholder-class="ph"
+        maxlength="20" value="{{password}}" bindinput="onPwdInput" />
+      <view class="pwd-rules" wx:if="{{password}}">
+        <text class="pwd-rule {{pwdHasLetter ? 'pwd-rule--ok' : ''}}">{{pwdHasLetter ? '✓' : '○'}} 含字母</text>
+        <text class="pwd-rule {{pwdHasDigit ? 'pwd-rule--ok' : ''}}">{{pwdHasDigit ? '✓' : '○'}} 含数字</text>
+        <text class="pwd-rule {{password.length >= 6 ? 'pwd-rule--ok' : ''}}">{{password.length >= 6 ? '✓' : '○'}} 6-20 位</text>
+      </view>
+    </view>
+
+    <view class="field" wx:if="{{mode !== 'login'}}">
+      <view class="field__label">确认密码</view>
+      <input class="glass-input" password placeholder="再次输入密码" placeholder-class="ph"
+        maxlength="20" value="{{confirmPassword}}" bindinput="onConfirmInput" />
+    </view>
+  </view>
+
+  <!-- 提交 -->
+  <button class="pill-btn pill-btn--primary submit-btn {{submitting ? 'pill-btn--disabled' : ''}}"
+    hover-class="pill-btn--active" bindtap="submit">
+    {{mode === 'login' ? '登录' : (mode === 'setup' ? '完成设置' : '注册')}}
+  </button>
+
+  <!-- 游客通道 -->
+  <view class="guest-link" hover-class="guest-link--active" bindtap="goBrowse">
+    先逛逛，暂不{{mode === 'login' ? '登录' : '注册'}} ›
+  </view>
+</view>

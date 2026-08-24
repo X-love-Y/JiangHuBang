@@ -1,0 +1,116 @@
+<view class="page-container list-page">
+  <!-- 平台公告 -->
+  <view class="announce-banner fade-up" wx:if="{{announcement}}">📢 {{announcement.content}}</view>
+
+  <!-- 搜索 -->
+  <view class="search-row fade-up">
+    <view class="glass-input search-box">
+      <input placeholder="搜索委托标题…" placeholder-class="ph" confirm-type="search"
+        value="{{keyword}}" bindinput="onSearchInput" bindconfirm="onSearchConfirm" />
+    </view>
+    <view class="search-btn glass" hover-class="search-btn--active" bindtap="onSearchConfirm">🔍</view>
+  </view>
+
+  <!-- 广播位（喇叭/置顶委托） -->
+  <scroll-view scroll-x class="broadcast" enhanced show-scrollbar="{{false}}" wx:if="{{broadcast.length}}">
+    <view
+      wx:for="{{broadcast}}" wx:key="_id"
+      class="broadcast__card glass fade-up"
+      hover-class="broadcast__card--active"
+      data-id="{{item._id}}" bindtap="goDetail"
+    >
+      <text class="broadcast__icon">📣</text>
+      <view class="broadcast__body">
+        <view class="broadcast__title ellipsis">{{item.title}}</view>
+        <view class="broadcast__meta">
+          <text class="broadcast__amount">{{item.amountText}}</text>
+          <text class="broadcast__region">{{item.regionText}}</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 筛选区 -->
+  <view class="filters fade-up stagger-1">
+    <!-- 状态切换：可接取 / 已结束 -->
+    <view class="filter-row status-row">
+      <view class="chip status-chip {{statusFilter === 'active' ? 'chip--on' : ''}}"
+        hover-class="chip--active" data-filter="active" bindtap="pickStatusFilter">🟢 可接取</view>
+      <view class="chip status-chip {{statusFilter === 'closed' ? 'chip--on' : ''}}"
+        hover-class="chip--active" data-filter="closed" bindtap="pickStatusFilter">📦 已结束</view>
+    </view>
+    <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="filter-row">
+        <view
+          wx:for="{{categories}}" wx:key="code"
+          class="chip {{activeCategory === item.code ? 'chip--on' : ''}}"
+          hover-class="chip--active" data-code="{{item.code}}" bindtap="pickCategory"
+        >{{item.icon}} {{item.name}}</view>
+      </view>
+    </scroll-view>
+    <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="filter-row">
+        <view
+          wx:for="{{stars}}" wx:key="*this"
+          class="chip chip--sm {{activeStar === item ? 'chip--on' : ''}}"
+          hover-class="chip--active" data-star="{{item}}" bindtap="pickStar"
+        >{{item === 0 ? '全部星级' : item + '★'}}</view>
+        <view
+          wx:for="{{currencies}}" wx:key="value"
+          class="chip chip--sm {{activeCurrency === item.value ? 'chip--on' : ''}}"
+          hover-class="chip--active" data-currency="{{item.value}}" bindtap="pickCurrency"
+        >{{item.label}}</view>
+        <view
+          wx:for="{{sorts}}" wx:key="value"
+          class="chip chip--sm chip--sort {{activeSort === item.value ? 'chip--on' : ''}}"
+          hover-class="chip--active" data-sort="{{item.value}}" bindtap="pickSort"
+        >{{item.label}}</view>
+        <picker mode="region" bindchange="onRegionChange">
+          <view class="chip chip--sm {{regionText ? 'chip--on' : ''}}">📍 {{regionText || '地区'}}</view>
+        </picker>
+        <view class="chip chip--sm" wx:if="{{regionText}}" hover-class="chip--active" bindtap="clearRegion">✕</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 委托卡片流 -->
+  <view class="cards" wx:if="{{list.length}}">
+    <view
+      wx:for="{{list}}" wx:key="_id"
+      class="glass-card commission-card fade-up {{item.status !== 'pending' ? 'commission-card--closed' : ''}} {{index < 6 ? 'stagger-' + (index + 1) : ''}}"
+      hover-class="commission-card--active"
+      data-id="{{item._id}}" bindtap="goDetail"
+    >
+      <view class="commission-card__top">
+        <view class="commission-card__title ellipsis-2">{{item.title}}</view>
+        <view class="commission-card__amount">
+          <text class="commission-card__num">{{item.amountParts.num}}</text>
+          <text class="commission-card__unit {{item.amountParts.isGold ? 'unit--gold' : 'unit--silver'}}">{{item.amountParts.unit}}</text>
+        </view>
+      </view>
+      <view class="commission-card__mid">
+        <star-bar star="{{item.star}}" size="{{26}}" />
+        <text class="badge badge--ink">{{item.catIcon}} {{item.catName}}</text>
+        <text class="badge {{item.isPublic ? 'badge--info' : 'badge--silver'}}">{{item.isPublic ? '👥 多人·' + item.pendingCount + '人申请' : '👤 单人'}}</text>
+        <status-badge wx:if="{{item.status !== 'pending'}}" status="{{item.status}}" />
+        <text class="commission-card__region">📍 {{item.regionText}}</text>
+      </view>
+      <view class="commission-card__bottom">
+        <view class="commission-card__publisher">
+          <image wx:if="{{item.publisher.avatarUrl}}" class="commission-card__avatar" src="{{item.publisher.avatarUrl}}" mode="aspectFill" />
+          <view wx:else class="commission-card__avatar commission-card__avatar--placeholder">{{item.publisher.nickname[0]}}</view>
+          <text class="ellipsis">{{item.publisher.nickname}}</text>
+        </view>
+        <text class="commission-card__time">{{item.timeText}}<text wx:if="{{item.deadlineText}}"> · {{item.deadlineText}}</text></text>
+      </view>
+    </view>
+
+    <view class="list-footer" wx:if="{{!hasMore}}">— 江湖路远，且行且看 —</view>
+  </view>
+
+  <!-- 空状态 -->
+  <empty-state wx:if="{{!list.length && !loading}}" icon="🍃"
+    text="暂无委托，去发布第一张悬赏令吧" />
+  <button wx:if="{{!list.length && !loading}}" class="pill-btn pill-btn--primary empty-cta"
+    hover-class="pill-btn--active" bindtap="goPublish">发布委托</button>
+</view>

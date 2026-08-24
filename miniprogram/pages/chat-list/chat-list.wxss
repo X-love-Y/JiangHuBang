@@ -1,0 +1,73 @@
+/* chat-list —— 客服会话列表 */
+.chatlist-page {
+  padding-bottom: 60rpx;
+}
+.conv-card {
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+  margin-bottom: 20rpx;
+  transition: transform 150ms var(--ease-out);
+}
+.conv-card--active {
+  transform: scale(0.98);
+}
+.conv-card__avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+}
+.conv-card__avatar--placeholder {
+  background: linear-gradient(135deg, #D8DBE4, #C2C7D4);
+  color: #FFF;
+  font-size: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.conv-card__body {
+  flex: 1;
+  min-width: 0;
+}
+.conv-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+.conv-card__name {
+  font-size: 28rpx;
+  font-weight: 700;
+  max-width: 60%;
+}
+.conv-card__time {
+  font-size: 21rpx;
+  color: var(--ink-3);
+  flex-shrink: 0;
+}
+.conv-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-top: 8rpx;
+}
+.conv-card__preview {
+  flex: 1;
+  font-size: 23rpx;
+  color: var(--ink-3);
+}
+.conv-card__badge {
+  min-width: 34rpx;
+  height: 34rpx;
+  border-radius: var(--radius-pill);
+  background: var(--cinnabar);
+  color: #FFF;
+  font-size: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10rpx;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}

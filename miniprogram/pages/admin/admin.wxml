@@ -1,0 +1,256 @@
+<view class="page-container admin-page">
+  <!-- 身份条 -->
+  <view class="glass-card admin-banner fade-up">🛡️ 管理员面板 · 所有操作记录审计日志</view>
+
+  <!-- 标签 -->
+  <scroll-view scroll-x class="tab-scroll fade-up stagger-1" enhanced show-scrollbar="{{false}}">
+    <view class="tab-row">
+      <view wx:for="{{tabs}}" wx:key="key" class="chip {{tab === item.key ? 'chip--on' : ''}}"
+        hover-class="chip--active" data-key="{{item.key}}" bindtap="switchTab">{{item.label}}</view>
+    </view>
+  </scroll-view>
+
+  <!-- 搜索行（委托/用户/草稿/流水/聊天 共用） -->
+  <view class="search-row fade-up stagger-1" wx:if="{{needSearch}}">
+    <input class="glass-input search-input" placeholder="{{searchPlaceholder}}" placeholder-class="ph"
+      value="{{keyword}}" bindinput="onKeyword" confirm-type="search" bindconfirm="doSearch" />
+    <view class="pill-btn pill-btn--primary pill-btn--sm" hover-class="pill-btn--active" bindtap="doSearch">查询</view>
+  </view>
+
+  <!-- ===== 委托 ===== -->
+  <block wx:if="{{tab === 'commission'}}">
+    <view class="glass-card fade-up admin-card" wx:for="{{list}}" wx:key="_id">
+      <view class="admin-card__top">
+        <text class="admin-card__title ellipsis">{{item.title}}</text>
+        <text class="badge badge--ink">{{item.status}}</text>
+      </view>
+      <view class="admin-card__meta">{{item.commissionNo}} · {{item.amount}} {{item.currency === 'gold' ? '金' : '银'}} · {{item.star}}★ · {{item.publisherId}}</view>
+      <view class="admin-card__actions">
+        <view class="admin-act" hover-class="admin-act--active" data-id="{{item._id}}" bindtap="doPin">📌 置顶24h</view>
+        <view class="admin-act" hover-class="admin-act--active" data-id="{{item._id}}" data-amount="{{item.amount}}" bindtap="doChangeAmount">💰 改金额</view>
+        <view class="admin-act admin-act--danger" hover-class="admin-act--active" data-id="{{item._id}}" bindtap="doDelete">🗑 删除</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== 用户 ===== -->
+  <block wx:if="{{tab === 'user'}}">
+    <view class="glass-card fade-up admin-card" wx:for="{{list}}" wx:key="_id">
+      <view class="admin-card__top">
+        <text class="admin-card__title">{{item.nickname}}</text>
+        <text class="badge {{item.status === -1 ? 'badge--cinnabar' : 'badge--success'}}">{{item.status === -1 ? '已封禁' : '正常'}}</text>
+      </view>
+      <view class="admin-card__meta">ID：{{item.userId || '未注册'}} · 银 {{item.silver}} · 金 {{item.gold}} · 完成 {{item.stats.completed || 0}} 单</view>
+      <view class="admin-card__actions">
+        <view class="admin-act" hover-class="admin-act--active" data-id="{{item._id}}" data-type="publish" data-days="7" bindtap="doBan">🚫 禁发7天</view>
+        <view class="admin-act" hover-class="admin-act--active" data-id="{{item._id}}" data-type="chat" data-days="7" bindtap="doBan">🔇 禁言7天</view>
+        <view class="admin-act admin-act--danger" hover-class="admin-act--active" data-id="{{item._id}}" bindtap="doBanAccount">⛔ 封禁</view>
+        <view class="admin-act" hover-class="admin-act--active" data-id="{{item._id}}" bindtap="doUnban">✅ 解封</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== 聊天 ===== -->
+  <block wx:if="{{tab === 'chat'}}">
+    <view class="glass-card fade-up admin-card"
+      hover-class="chat-card--active" data-id="{{item.conversationId}}" bindtap="openChat">
+      <view class="admin-card__top">
+        <text class="admin-card__title ellipsis">{{item.commissionTitle}}</text>
+        <text class="admin-card__preview-count">{{item.msgCount || ''}} 条</text>
+      </view>
+      <view class="admin-card__meta">成员：{{item.memberNames}}</view>
+      <view class="admin-card__preview">{{item.lastPreview || '（无消息）'}} ›</view>
+    </view>
+    <!-- 展开的消息详情 -->
+    <view class="glass-card fade-up chat-detail" wx:if="{{openChatId === item.conversationId}}">
+      <view class="chat-detail__head">💬 {{openChatTitle}}</view>
+      <view class="chat-detail__msg" wx:for="{{openMessages}}" wx:key="_id">
+        <view class="chat-detail__name">{{item.senderName}}</view>
+        <view class="chat-detail__body">
+          <text wx:if="{{item.type === 'text'}}">{{item.text}}</text>
+          <text wx:elif="{{item.type === 'image'}}">[图片]</text>
+          <text wx:elif="{{item.type === 'voice'}}">[语音 {{item.duration}}"]</text>
+          <text wx:else>[视频]</text>
+        </view>
+      </view>
+      <view class="chat-detail__empty" wx:if="{{!openMessages.length}}">暂无消息</view>
+    </view>
+  </block>
+
+  <!-- ===== 草稿 ===== -->
+  <block wx:if="{{tab === 'draft'}}">
+    <view class="glass-card fade-up admin-card" wx:for="{{list}}" wx:key="_id">
+      <view class="admin-card__top">
+        <text class="admin-card__title ellipsis">{{item.title}}</text>
+        <text class="badge badge--ink">{{item.status}}</text>
+      </view>
+      <view class="admin-card__meta">{{item.amount}} {{item.currency === 'gold' ? '金' : '银'}} · 链：{{item.chain ? item.chain.chainId : '无'}}</view>
+    </view>
+  </block>
+
+  <!-- ===== 流水 ===== -->
+  <block wx:if="{{tab === 'tx'}}">
+    <view class="glass-card fade-up admin-card" hover-class="tx-card--active"
+      data-id="{{item._id}}" bindtap="openTx" wx:for="{{list}}" wx:key="_id">
+      <view class="admin-card__top">
+        <text class="admin-card__title ellipsis">{{item.remark}}</text>
+        <text class="admin-card__amount {{item.amount >= 0 ? 'tx--plus' : ''}}">{{item.amount >= 0 ? '+' : ''}}{{item.amount}} {{item.currency === 'gold' ? '金' : '银'}}</text>
+      </view>
+      <view class="admin-card__meta">
+        <text class="tx-user">{{item.userName}}</text>
+        <text wx:if="{{item.userNickname}}" class="tx-nickname">（{{item.userNickname}}）</text>
+        <text class="tx-type">· {{item.type}} · {{item.timeText}}</text>
+      </view>
+      <!-- 详情展开 -->
+      <view class="tx-detail" wx:if="{{openTxId === item._id}}">
+        <view class="tx-detail__row">类型：{{item.type}}</view>
+        <view class="tx-detail__row">变动：{{item.amount >= 0 ? '+' : ''}}{{item.amount}} {{item.currency === 'gold' ? '金' : '银'}}</view>
+        <view class="tx-detail__row">变动后余额：{{item.balanceAfter == null ? '—' : item.balanceAfter}}</view>
+        <view class="tx-detail__row">关联：{{item.relatedId || '—'}}</view>
+        <view class="tx-detail__row">时间：{{item.timeText}}</view>
+        <view class="tx-detail__row">用户：{{item.userId}}</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== 公告 ===== -->
+  <block wx:if="{{tab === 'announce'}}">
+    <view class="glass-card fade-up admin-card">
+      <textarea class="glass-input textarea" placeholder="公告内容（最多 200 字）" placeholder-class="ph"
+        maxlength="200" value="{{announceText}}" bindinput="onAnnounceInput" auto-height />
+      <view class="admin-card__actions">
+        <view class="admin-act" hover-class="admin-act--active" data-hours="24" bindtap="doAnnounce">📢 发布 24h</view>
+        <view class="admin-act" hover-class="admin-act--active" data-hours="72" bindtap="doAnnounce">📢 发布 3 天</view>
+      </view>
+    </view>
+    <view class="glass-card fade-up admin-card" wx:for="{{announces}}" wx:key="_id">
+      <view class="admin-card__preview">{{item.content}}</view>
+    </view>
+  </block>
+
+  <!-- ===== 财报（老板视角） ===== -->
+  <block wx:if="{{tab === 'finance' && finance}}">
+    <!-- 总览卡 -->
+    <view class="glass-card fade-up fin-overview">
+      <view class="fin-kpi fin-kpi--dual">
+        <view class="fin-kpi__label">平台收入</view>
+        <view class="fin-dual__row">
+          <view class="coin coin--sm coin--silver"></view>
+          <view class="fin-dual__value">{{finance.feeSilver}}</view>
+          <text class="fin-dual__unit">银</text>
+        </view>
+        <view class="fin-dual__divider"></view>
+        <view class="fin-dual__row">
+          <view class="coin coin--sm coin--gold"></view>
+          <view class="fin-dual__value fin-dual__value--gold">{{finance.feeGold}}</view>
+          <text class="fin-dual__unit">金</text>
+        </view>
+      </view>
+      <view class="fin-kpi fin-kpi--dual">
+        <view class="fin-kpi__label">充值总额</view>
+        <view class="fin-dual__row">
+          <view class="coin coin--sm coin--silver"></view>
+          <view class="fin-dual__value">{{finance.rechargeTotal}}</view>
+          <text class="fin-dual__unit">银</text>
+        </view>
+        <view class="fin-dual__divider"></view>
+        <view class="fin-dual__row">
+          <view class="coin coin--sm coin--gold"></view>
+          <view class="fin-dual__value fin-dual__value--gold">{{finance.rechargeGold}}</view>
+          <text class="fin-dual__unit">金</text>
+        </view>
+      </view>
+      <view class="fin-kpi fin-kpi--dual">
+        <view class="fin-kpi__label">托管中</view>
+        <view class="fin-dual__row">
+          <view class="coin coin--sm coin--silver"></view>
+          <view class="fin-dual__value">{{finance.escrowSilver}}</view>
+          <text class="fin-dual__unit">银</text>
+        </view>
+        <view class="fin-dual__divider"></view>
+        <view class="fin-dual__row">
+          <view class="coin coin--sm coin--gold"></view>
+          <view class="fin-dual__value fin-dual__value--gold">{{finance.escrowGold}}</view>
+          <text class="fin-dual__unit">金</text>
+        </view>
+      </view>
+      <view class="fin-kpi fin-kpi--dual">
+        <view class="fin-kpi__label">用户总余额</view>
+        <view class="fin-dual__row">
+          <view class="coin coin--sm coin--silver"></view>
+          <view class="fin-dual__value">{{finance.balSilver}}</view>
+          <text class="fin-dual__unit">银</text>
+        </view>
+        <view class="fin-dual__divider"></view>
+        <view class="fin-dual__row">
+          <view class="coin coin--sm coin--gold"></view>
+          <view class="fin-dual__value fin-dual__value--gold">{{finance.balGold}}</view>
+          <text class="fin-dual__unit">金</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-title">近 14 天平台收入（金线）与充值（蓝线）</view>
+    <view class="glass-card fade-up fin-chart-card">
+      <canvas type="2d" id="chart-line" class="fin-chart fin-chart--line"></canvas>
+    </view>
+
+    <view class="section-title">近 14 天新增委托数</view>
+    <view class="glass-card fade-up fin-chart-card">
+      <canvas type="2d" id="chart-bar" class="fin-chart fin-chart--bar"></canvas>
+    </view>
+
+    <view class="section-title">委托分类占比（共 {{finance.catDist.length}} 类）</view>
+    <view class="glass-card fade-up fin-chart-card">
+      <canvas type="2d" id="chart-pie" class="fin-chart fin-chart--pie"></canvas>
+      <view class="fin-legend">
+        <view class="fin-legend__item" wx:for="{{finance.pieLegend}}" wx:key="categoryId">
+          <view class="fin-legend__dot" style="background: {{item.color}}"></view>
+          <text class="fin-legend__name">{{item.name}}</text>
+          <text class="fin-legend__count">{{item.count}} 单</text>
+          <text class="fin-legend__pct">{{item.pct}}%</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-title">🏆 头部用户（按白银余额）</view>
+    <view class="glass-card fade-up fin-users">
+      <view class="fin-user" wx:for="{{finance.topUsers}}" wx:key="userId">
+        <text class="fin-user__rank">{{index + 1}}</text>
+        <view class="fin-user__body">
+          <view class="fin-user__name">{{item.nickname}}</view>
+          <view class="fin-user__id">ID {{item.userId}} · 完成 {{item.completed}} 单</view>
+        </view>
+        <view class="fin-user__bal">
+          <view class="fin-user__bal-row">
+            <view class="coin coin--sm coin--silver"></view>
+            <text class="fin-user__bal-num">{{item.silver}}</text>
+          </view>
+          <view class="fin-user__bal-row">
+            <view class="coin coin--sm coin--gold"></view>
+            <text class="fin-user__bal-num fin-user__bal-num--gold">{{item.gold}}</text>
+          </view>
+          <text class="fin-user__bal-total">≈ {{item.totalEquiv}} 银</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== 日志 ===== -->
+  <block wx:if="{{tab === 'log'}}">
+    <view class="glass-card fade-up admin-card" hover-class="tx-card--active"
+      data-id="{{item._id}}" bindtap="openLog" wx:for="{{list}}" wx:key="_id">
+      <view class="admin-card__top">
+        <text class="admin-card__title">{{item.action}}</text>
+        <text class="admin-card__time">{{item.timeText}}</text>
+      </view>
+      <view class="admin-card__meta">对象：{{item.targetType}} {{item.targetId}} · 操作人 {{item.adminId}}</view>
+      <view class="tx-detail" wx:if="{{openLogId === item._id}}">
+        <view class="tx-detail__row" wx:if="{{item.detailText}}">详情：{{item.detailText}}</view>
+        <view class="tx-detail__row">完整时间：{{item.timeText}}</view>
+      </view>
+    </view>
+  </block>
+
+  <empty-state wx:if="{{!list.length && !loading && needSearch && tab !== 'announce'}}" icon="🍂" text="暂无结果，试试其他关键词" />
+</view>

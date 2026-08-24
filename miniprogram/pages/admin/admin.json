@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "管理面板",
+  "usingComponents": {
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

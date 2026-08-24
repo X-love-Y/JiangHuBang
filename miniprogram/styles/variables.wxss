@@ -1,0 +1,46 @@
+/* variables.wxss —— 设计系统变量源
+ * 所有页面/组件通过 var(--xxx) 引用，统一调整只改此处
+ */
+page {
+  /* ---- 配色：柔和浅灰白 + 墨色 + 朱砂/金/银点缀 ---- */
+  --bg: #F2F3F7;
+  --bg-deep: #E9EBF1;                          /* 深一档底色，用于渐变 */
+  --ink: #1C1C1E;                              /* 墨黑主文字 */
+  --ink-2: #6E6E73;                            /* 次级文字 */
+  --ink-3: #AEAEB2;                            /* 占位/弱文字 */
+  --cinnabar: #C24B3A;                         /* 朱砂红：金额、强调 */
+  --cinnabar-soft: rgba(194, 75, 58, 0.10);    /* 朱砂浅底 */
+  --gold: #C9A227;                             /* 黄金币色 */
+  --gold-deep: #A8871E;
+  --gold-soft: rgba(201, 162, 39, 0.14);       /* 金浅底 */
+  --silver: #8E8E93;                           /* 白银币色 */
+  --silver-soft: rgba(142, 142, 147, 0.14);    /* 银浅底 */
+  --star: #E8B54D;                             /* 星级金 */
+  --success: #3BA55D;
+  --danger: #D9534F;
+  --info: #4A7BD0;
+
+  /* ---- 玻璃拟态 ---- */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-bg-strong: rgba(255, 255, 255, 0.85);
+  --glass-border: 1rpx solid rgba(255, 255, 255, 0.85);
+  --glass-blur: blur(24rpx) saturate(180%);
+
+  /* ---- 形状：Squircle 超大圆角 + 胶囊 ---- */
+  --radius-card: 40rpx;
+  --radius-card-lg: 52rpx;
+  --radius-pill: 999rpx;
+
+  /* ---- Soft UI 阴影：柔和双层 ---- */
+  --shadow-soft: 0 12rpx 40rpx rgba(31, 35, 55, 0.08), 0 2rpx 8rpx rgba(31, 35, 55, 0.04);
+  --shadow-float: 0 20rpx 60rpx rgba(31, 35, 55, 0.12), 0 4rpx 16rpx rgba(31, 35, 55, 0.06);
+  --shadow-inset: inset 0 1rpx 0 rgba(255, 255, 255, 0.9);
+
+  /* ---- 间距 ---- */
+  --page-pad: 32rpx;
+  --card-gap: 24rpx;
+  --card-pad: 32rpx;
+
+  /* ---- 动效 ---- */
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}

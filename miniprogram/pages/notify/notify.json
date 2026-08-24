@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "站内通知",
+  "usingComponents": {
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

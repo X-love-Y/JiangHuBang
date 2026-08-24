@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "发布委托",
+  "usingComponents": {
+    "star-bar": "/components/star-bar/star-bar"
+  }
+}

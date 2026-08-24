@@ -1,0 +1,99 @@
+<view class="page-container drafts-page">
+  <!-- 视图切换 -->
+  <view class="tabs glass fade-up">
+    <view class="tabs__item {{tab === 'draft' ? 'tabs__item--on' : ''}}"
+      hover-class="tabs__item--active" data-tab="draft" bindtap="switchTab">📝 草稿</view>
+    <view class="tabs__item {{tab === 'chain' ? 'tabs__item--on' : ''}}"
+      hover-class="tabs__item--active" data-tab="chain" bindtap="switchTab">🔗 委托链</view>
+    <view class="tabs__item {{tab === 'history' ? 'tabs__item--on' : ''}}"
+      hover-class="tabs__item--active" data-tab="history" bindtap="switchTab">🕘 历史链</view>
+  </view>
+
+  <!-- ===== 草稿视图 ===== -->
+  <block wx:if="{{tab === 'draft'}}">
+    <view class="glass-card fade-up draft-card {{index < 6 ? 'stagger-' + (index + 1) : ''}}"
+      wx:for="{{list}}" wx:key="_id">
+      <view class="draft-card__top">
+        <view class="draft-card__title ellipsis">{{item.title}}</view>
+        <text class="badge {{item.statusBadge}}">{{item.statusText}}</text>
+      </view>
+      <view class="draft-card__meta">
+        <text class="draft-card__amount">{{item.amountText}}</text>
+        <text class="draft-card__mode">{{item.isPublic ? '👥 公共模式' : '👤 私人模式'}}</text>
+        <text wx:if="{{item.scheduledText}}" class="draft-card__time">⏰ {{item.scheduledText}}</text>
+      </view>
+      <view class="draft-card__chain" wx:if="{{item.chain}}">
+        🔗 {{item.chain.chainId}} · 第 {{item.chain.seq}}/{{item.chain.total}} 步 · {{item.triggerText}}
+      </view>
+      <view class="draft-card__fail" wx:if="{{item.failReason}}">⚠️ {{item.failReason}}</view>
+      <view class="draft-card__actions" wx:if="{{item.canPublish || item.canDelete || !item.chain}}">
+        <view class="draft-action" wx:if="{{item.canDelete}}"
+          hover-class="draft-action--active" data-id="{{item._id}}" bindtap="removeDraft">🗑 删除</view>
+        <view class="draft-action" wx:if="{{!item.chain}}"
+          hover-class="draft-action--active" data-id="{{item._id}}" bindtap="openChain">🔗 加入委托链</view>
+        <view class="draft-action draft-action--primary" wx:if="{{item.canPublish}}"
+          hover-class="draft-action--active" data-id="{{item._id}}" data-title="{{item.title}}" bindtap="publishDraft">
+          {{item.status === 'ready' ? '✅ 确认发布' : '🚀 立即发布'}}
+        </view>
+      </view>
+    </view>
+    <empty-state wx:if="{{!list.length && !loading}}" icon="📝" text="还没有草稿，发布页可保存草稿" />
+  </block>
+
+  <!-- ===== 委托链视图 ===== -->
+  <block wx:elif="{{tab === 'chain'}}">
+    <view class="glass-card fade-up chain-card {{index < 6 ? 'stagger-' + (index + 1) : ''}}"
+      wx:for="{{chains}}" wx:key="chainId">
+      <!-- 链头部 -->
+      <view class="chain-card__head">
+        <view>
+          <view class="chain-card__id">🔗 {{item.chainId}}</view>
+          <view class="chain-card__summary">共 {{item.total}} 步 · 已发布 {{item.publishedCount}} 步</view>
+        </view>
+        <view class="chain-card__actions">
+          <view class="draft-action" hover-class="draft-action--active"
+            data-chain="{{item.chainId}}" bindtap="changeTotal">✏️ 改总步数</view>
+          <view class="draft-action draft-action--danger" hover-class="draft-action--active"
+            data-chain="{{item.chainId}}" bindtap="disbandChain">💥 解散链</view>
+        </view>
+      </view>
+
+      <!-- 步骤列表 -->
+      <view class="chain-step" wx:for="{{item.steps}}" wx:for-item="s" wx:key="_id">
+        <view class="chain-step__seq">{{s.chain.seq}}</view>
+        <view class="chain-step__body">
+          <view class="chain-step__title ellipsis">{{s.title}}</view>
+          <view class="chain-step__meta">
+            <text class="badge {{s.statusBadge}}">{{s.statusText}}</text>
+            <text class="chain-step__trigger">{{s.triggerText}}</text>
+            <text wx:if="{{s.scheduledText}}" class="chain-step__time">⏰ {{s.scheduledText}}</text>
+          </view>
+        </view>
+        <view class="chain-step__ops" wx:if="{{s.status !== 'published' && s.status !== 'cancelled'}}">
+          <view class="op-link" hover-class="op-link--active" data-id="{{s._id}}" bindtap="changeSwap">交换</view>
+          <view class="op-link" hover-class="op-link--active" data-id="{{s._id}}" bindtap="changeTrigger">触发</view>
+          <view class="op-link" hover-class="op-link--active" data-id="{{s._id}}" bindtap="changeSchedule">定时</view>
+          <view class="op-link op-link--danger" hover-class="op-link--active" data-id="{{s._id}}" bindtap="removeFromChain">移出</view>
+        </view>
+      </view>
+    </view>
+    <empty-state wx:if="{{!chains.length && !loading}}" icon="🔗" text="还没有委托链，在草稿上点「加入委托链」创建" />
+  </block>
+
+  <!-- ===== 历史链视图 ===== -->
+  <block wx:else>
+    <view class="glass-card fade-up history-card {{index < 6 ? 'stagger-' + (index + 1) : ''}}"
+      wx:for="{{histories}}" wx:key="chainId">
+      <view class="history-card__head">
+        <view>
+          <view class="history-card__id">🕘 {{item.chainId}}</view>
+          <view class="history-card__time">解散于 {{item.disbandedText}}</view>
+        </view>
+        <view class="draft-action draft-action--primary" hover-class="draft-action--active"
+          data-chain="{{item.chainId}}" bindtap="restoreChain">恢复</view>
+      </view>
+      <view class="history-card__steps" wx:if="{{item.stepsSummary}}">{{item.stepsSummary}}</view>
+    </view>
+    <empty-state wx:if="{{!histories.length && !loading}}" icon="🕘" text="暂无历史链（解散的链保留 30 天可恢复）" />
+  </block>
+</view>

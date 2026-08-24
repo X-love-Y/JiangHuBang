@@ -1,0 +1,68 @@
+/* splash —— 启动页：柔和渐变底 + 光斑 + 逐字浮现竖排标语 */
+page {
+  background: #F2F3F7;
+}
+
+.splash {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(165deg, #F7F8FB 0%, #EDEFF4 55%, #E7EAF1 100%);
+}
+
+.blob--a {
+  width: 560rpx;
+  height: 560rpx;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.16), transparent 70%);
+  top: -140rpx;
+  right: -180rpx;
+}
+.blob--b {
+  width: 640rpx;
+  height: 640rpx;
+  background: radial-gradient(circle, rgba(74, 123, 208, 0.10), transparent 70%);
+  bottom: -200rpx;
+  left: -220rpx;
+}
+.blob--c {
+  width: 420rpx;
+  height: 420rpx;
+  background: radial-gradient(circle, rgba(194, 75, 58, 0.09), transparent 70%);
+  top: 42%;
+  left: -140rpx;
+}
+
+.splash__text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "STKaiti", "KaiTi", serif;
+  font-weight: 600;
+  color: #1C1C1E;
+}
+
+.splash__char {
+  font-size: 88rpx;
+  line-height: 1.5;
+  letter-spacing: 8rpx;
+  opacity: 0;
+  text-shadow: 0 10rpx 36rpx rgba(31, 35, 55, 0.14);
+  animation: charIn 720ms var(--ease-out) both;
+}
+
+@keyframes charIn {
+  from {
+    opacity: 0;
+    transform: translateY(40rpx);
+    filter: blur(8rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}

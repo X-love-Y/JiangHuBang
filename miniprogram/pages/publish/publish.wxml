@@ -1,0 +1,173 @@
+<view class="page-container">
+  <!-- 表单卡 -->
+  <view class="glass-card fade-up stagger-1 form-card">
+    <!-- 标题 -->
+    <view class="field">
+      <view class="field__label">委托标题 <text class="field__req">*</text></view>
+      <input class="glass-input" placeholder="一句话说清要办什么事" placeholder-class="ph"
+        maxlength="30" value="{{title}}" bindinput="onTitleInput" />
+    </view>
+
+    <!-- 描述 -->
+    <view class="field">
+      <view class="field__label">委托描述</view>
+      <textarea class="glass-input textarea" placeholder="详细说明需求、交付标准、时间要求等"
+        placeholder-class="ph" maxlength="1000" value="{{description}}"
+        bindinput="onDescInput" auto-height />
+    </view>
+
+    <!-- 分类 -->
+    <view class="field">
+      <view class="field__label">委托分类 <text class="field__req">*</text></view>
+      <scroll-view scroll-x class="chips" enhanced show-scrollbar="{{false}}">
+        <view
+          wx:for="{{categories}}" wx:key="code"
+          class="chip {{activeCategory.code === item.code ? 'chip--on' : ''}}"
+          hover-class="chip--active" data-i="{{index}}" bindtap="pickCategory"
+        >{{item.icon}} {{item.name}}</view>
+      </scroll-view>
+      <view class="subchips" wx:if="{{activeCategory && subList.length}}">
+        <view
+          wx:for="{{subList}}" wx:key="code"
+          class="chip chip--sm {{subIndex === index ? 'chip--on' : ''}}"
+          hover-class="chip--active" data-i="{{index}}" bindtap="pickSub"
+        >{{item.name}}</view>
+      </view>
+      <view class="field__hint" wx:if="{{activeCategory && activeCategory.notice}}">
+        ⚠️ {{activeCategory.notice}}
+      </view>
+    </view>
+
+    <!-- 地区 -->
+    <view class="field">
+      <view class="field__label">委托地区</view>
+      <picker mode="region" bindchange="onRegionChange">
+        <view class="glass-input picker-row">
+          <text class="{{regionText ? '' : 'ph'}}">{{regionText || '选择省市区'}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 发布模式 -->
+    <view class="field">
+      <view class="field__label">发布模式 <text class="field__req">*</text></view>
+      <view class="currency-seg">
+        <view class="seg {{mode === 'private' ? 'seg--on' : ''}}" hover-class="seg--active"
+          data-mode="private" bindtap="switchMode">👤 私人模式</view>
+        <view class="seg {{mode === 'public' ? 'seg--on' : ''}}" hover-class="seg--active"
+          data-mode="public" bindtap="switchMode">👥 公共模式</view>
+      </view>
+      <block wx:if="{{mode === 'public'}}">
+        <view class="acceptor-range">
+          <input class="glass-input range-input" type="number" placeholder="最少" placeholder-class="ph"
+            value="{{minAcceptors}}" bindinput="onMinInput" />
+          <text class="range-sep">至</text>
+          <input class="glass-input range-input" type="number" placeholder="最多" placeholder-class="ph"
+            value="{{maxAcceptors}}" bindinput="onMaxInput" />
+          <text class="range-unit">人</text>
+        </view>
+        <view class="currency-seg split-seg">
+          <view class="seg seg--sm {{splitMode === 'equal' ? 'seg--on' : ''}}" hover-class="seg--active"
+            data-mode="equal" bindtap="switchSplitMode">⚖️ 赏金均分</view>
+          <view class="seg seg--sm {{splitMode === 'custom' ? 'seg--on' : ''}}" hover-class="seg--active"
+            data-mode="custom" bindtap="switchSplitMode">📐 自定义比例</view>
+        </view>
+        <view class="field__hint">
+          公共模式：侠士申请接取 → 你从申请人中选定合作者（{{minAcceptors}}-{{maxAcceptors}} 人）→ 开始合作。
+          {{splitMode === 'custom' ? '选定合作者时需给每人分配比例（合计 100%）。' : '赏金由合作者均分。'}}
+        </view>
+      </block>
+      <view class="field__hint" wx:else>私人模式：先到先得，单人接取，适合小成本短周期任务</view>
+    </view>
+
+    <!-- 币种 + 金额 + 星级 -->
+    <view class="field">
+      <view class="field__label field__label--between">
+        <text>悬赏金额 <text class="field__req">*</text></text>
+        <view class="balance-inline" wx:if="{{user}}"><view class="coin coin--sm coin--silver"></view>{{user.silver || 0}} 银 · <view class="coin coin--sm coin--gold"></view>{{user.gold || 0}} 金</view>
+      </view>
+      <view class="currency-seg">
+        <view class="seg {{currency === 'silver' ? 'seg--on' : ''}}" data-currency="silver"
+          hover-class="seg--active" bindtap="switchCurrency"><view class="coin coin--sm coin--silver"></view><text class="seg__label">白银</text></view>
+        <view class="seg {{currency === 'gold' ? 'seg--on' : ''}}" data-currency="gold"
+          hover-class="seg--active" bindtap="switchCurrency"><view class="coin coin--sm coin--gold"></view><text class="seg__label">黄金</text></view>
+      </view>
+      <view class="amount-row">
+        <input class="glass-input amount-input" type="number" placeholder="最低 {{currency === 'gold' ? '1' : '10'}} {{currency === 'gold' ? '金' : '银'}}"
+          placeholder-class="ph" value="{{amount}}" bindinput="onAmountInput" />
+        <view class="amount-unit">{{currency === 'gold' ? '金' : '银'}}</view>
+      </view>
+      <view class="star-preview" wx:if="{{star > 0}}">
+        <star-bar star="{{star}}" size="{{34}}" />
+        <text class="star-preview__desc">{{star}} 星 · {{starDesc}}</text>
+      </view>
+      <view class="field__hint">金额梯度决定星级：1金=100银 · 平台收取 1% 中介费</view>
+      <view class="ai-assess" wx:if="{{assessResult}}">
+        <view class="ai-assess__row">
+          <text class="ai-assess__star">AI 建议：{{assessResult.suggestStar}} 星 · {{assessResult.difficulty}}</text>
+          <text wx:if="{{assessResult.free}}" class="badge badge--gold">月卡免费</text>
+          <text wx:elif="{{assessResult.cost}}" class="badge badge--silver">-{{assessResult.cost}} 银</text>
+        </view>
+        <view class="ai-assess__reason">{{assessResult.reason}}</view>
+      </view>
+      <view class="ai-assess-btn" hover-class="ai-assess-btn--active" bindtap="askAI">🤖 AI 评定建议</view>
+    </view>
+
+    <!-- 图片 -->
+    <view class="field">
+      <view class="field__label">凭证图片（最多 9 张）</view>
+      <view class="img-grid">
+        <view wx:for="{{images}}" wx:key="*this" class="img-cell">
+          <image src="{{item}}" mode="aspectFill" data-i="{{index}}" bindtap="previewImage" />
+          <view class="img-cell__del" data-i="{{index}}" catchtap="removeImage">✕</view>
+        </view>
+        <view class="img-cell img-cell--add" hover-class="img-cell--active" wx:if="{{images.length < 9}}" bindtap="chooseImages">
+          <text class="img-add-plus">＋</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 发布时间 -->
+    <view class="field">
+      <view class="field__label">发布时间</view>
+      <view class="currency-seg">
+        <view class="seg {{publishMode === 'now' ? 'seg--on' : ''}}" hover-class="seg--active"
+          data-mode="now" bindtap="switchPublishMode">⚡ 立即发布</view>
+        <view class="seg {{publishMode === 'scheduled' ? 'seg--on' : ''}}" hover-class="seg--active"
+          data-mode="scheduled" bindtap="switchPublishMode">⏰ 定时发布</view>
+      </view>
+      <view class="publish-time-row" wx:if="{{publishMode === 'scheduled'}}">
+        <picker mode="date" start="{{minDeadline}}" end="{{maxDeadline}}" value="{{publishDate}}" bindchange="onPublishDateChange">
+          <view class="glass-input picker-row publish-time-cell">
+            <text>{{publishDate}}</text>
+          </view>
+        </picker>
+        <picker mode="time" value="{{publishTime}}" bindchange="onPublishTimeChange">
+          <view class="glass-input picker-row publish-time-cell">
+            <text>{{publishTime}}</text>
+          </view>
+        </picker>
+      </view>
+      <view class="field__hint" wx:if="{{publishMode === 'scheduled'}}">
+        定时委托发布前不公开展示，到点自动上架大厅（托管金额照常扣除）
+      </view>
+    </view>
+
+    <!-- 截止时间 -->
+    <view class="field">
+      <view class="field__label">接单截止日期</view>
+      <picker mode="date" start="{{minDeadline}}" end="{{maxDeadline}}" value="{{deadlineText}}" bindchange="onDeadlineChange">
+        <view class="glass-input picker-row">
+          <text>{{deadlineText}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 提交 -->
+  <button class="pill-btn pill-btn--primary submit-btn {{submitting ? 'pill-btn--disabled' : ''}}"
+    hover-class="pill-btn--active" bindtap="submit">发布委托</button>
+  <button class="pill-btn pill-btn--ghost draft-btn" hover-class="pill-btn--active" bindtap="saveDraft">存为草稿</button>
+</view>

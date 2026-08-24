@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "AI 助手",
+  "usingComponents": {
+    "star-bar": "/components/star-bar/star-bar",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

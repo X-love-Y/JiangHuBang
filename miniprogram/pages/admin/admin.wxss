@@ -1,0 +1,330 @@
+/* admin —— 管理面板 */
+.admin-page {
+  padding-bottom: 60rpx;
+}
+.admin-banner {
+  padding: 24rpx 32rpx;
+  font-size: 25rpx;
+  color: var(--gold-deep);
+  background: linear-gradient(135deg, rgba(255, 251, 235, 0.95), rgba(255, 255, 255, 0.88));
+  border: 1rpx solid rgba(201, 162, 39, 0.28);
+}
+.tab-scroll {
+  white-space: nowrap;
+  width: 100%;
+  margin: 20rpx 0;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg);
+  padding: 8rpx 0;
+}
+.tx-card--active {
+  transform: scale(0.99);
+}
+.tx-user {
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.tx-nickname {
+  color: var(--ink-3);
+}
+.tx-type {
+  color: var(--ink-3);
+}
+.tx-detail {
+  margin-top: 10rpx;
+  padding: 14rpx 18rpx;
+  background: rgba(28, 28, 30, 0.04);
+  border-radius: 16rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.tx-detail__row {
+  font-size: 22rpx;
+  color: var(--ink-2);
+  word-break: break-all;
+}
+.tab-row {
+  display: inline-flex;
+  gap: 12rpx;
+  padding: 4rpx 2rpx;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 10rpx 24rpx;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1rpx solid rgba(255, 255, 255, 0.9);
+  font-size: 23rpx;
+  color: var(--ink-2);
+  box-shadow: 0 4rpx 14rpx rgba(31, 35, 55, 0.05);
+  transition: all 150ms var(--ease-out);
+}
+.chip--on {
+  background: linear-gradient(135deg, #2A2A2E 0%, #1C1C1E 100%);
+  color: #FFFFFF;
+  border-color: transparent;
+  box-shadow: 0 8rpx 20rpx rgba(28, 28, 30, 0.20);
+}
+.chip--active {
+  transform: scale(0.95);
+}
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+}
+.search-input {
+  flex: 1;
+  width: auto;
+}
+.ph {
+  color: var(--ink-3);
+}
+
+.admin-card {
+  margin-bottom: 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+.admin-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+.admin-card__title {
+  flex: 1;
+  font-size: 27rpx;
+  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.admin-card__meta {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  word-break: break-all;
+}
+.admin-card__amount {
+  font-weight: 800;
+  color: var(--cinnabar);
+  flex-shrink: 0;
+}
+.tx--plus {
+  color: var(--success);
+}
+.admin-card__preview {
+  font-size: 24rpx;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.admin-card__actions {
+  display: flex;
+  gap: 14rpx;
+  flex-wrap: wrap;
+  padding-top: 12rpx;
+  border-top: 1rpx solid rgba(28, 28, 30, 0.05);
+}
+.admin-act {
+  font-size: 22rpx;
+  color: var(--ink-2);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1rpx solid rgba(28, 28, 30, 0.10);
+  border-radius: var(--radius-pill);
+  padding: 8rpx 20rpx;
+  transition: transform 120ms var(--ease-out);
+}
+.admin-act--danger {
+  color: var(--danger);
+  border-color: rgba(217, 83, 79, 0.30);
+}
+.admin-act--active {
+  transform: scale(0.93);
+}
+.textarea {
+  min-height: 120rpx;
+  width: 100%;
+}
+
+/* ===== 财报看板 ===== */
+.fin-overview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  padding: 28rpx 20rpx;
+}
+.fin-kpi {
+  flex: 1;
+  min-width: 40%;
+  align-items: center;
+  gap: 8rpx;
+  padding: 20rpx 8rpx;
+  border: 1rpx solid rgba(28, 28, 30, 0.06);
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+  padding: 16rpx 8rpx;
+}
+.fin-kpi__value {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: var(--cinnabar);
+}
+.fin-kpi__label {
+  font-size: 21rpx;
+  color: var(--ink-2);
+  text-align: center;
+  line-height: 1.5;
+}
+.fin-kpi__sub {
+  color: var(--ink-3);
+  font-size: 19rpx;
+}
+.fin-chart-card {
+  padding: 20rpx;
+}
+.fin-chart--line {
+  width: 100%;
+  height: 280rpx;
+}
+.fin-chart--bar {
+  width: 100%;
+  height: 240rpx;
+}
+.fin-chart--pie {
+  width: 100%;
+  height: 300rpx;
+}
+.fin-users {
+  padding: 8rpx 28rpx;
+}
+.fin-user {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid rgba(28, 28, 30, 0.05);
+}
+.fin-user:last-child {
+  border-bottom: none;
+}
+.fin-user__rank {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  color: var(--gold-deep);
+  font-size: 24rpx;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.fin-user__body {
+  flex: 1;
+  min-width: 0;
+}
+.fin-user__name {
+  font-size: 26rpx;
+  font-weight: 700;
+}
+.fin-user__id {
+  font-size: 20rpx;
+  color: var(--ink-3);
+  margin-top: 2rpx;
+}
+.fin-user__bal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4rpx;
+  flex-shrink: 0;
+}
+.fin-user__bal-row {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+.fin-user__bal-num {
+  font-size: 25rpx;
+  font-weight: 800;
+}
+.fin-user__bal-num--gold {
+  color: var(--gold-deep);
+}
+.fin-user__bal-total {
+  font-size: 19rpx;
+  color: var(--ink-3);
+}
+
+/* 双币 KPI */
+.fin-kpi--dual {
+  border: 1rpx solid rgba(28, 28, 30, 0.06);
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.55);
+}
+.fin-dual__row {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+.fin-dual__value {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: var(--ink);
+}
+.fin-dual__value--gold {
+  color: var(--gold-deep);
+}
+.fin-dual__unit {
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+.fin-dual__divider {
+  width: 70%;
+  height: 1rpx;
+  background: rgba(28, 28, 30, 0.08);
+  margin: 6rpx 0;
+}
+/* 饼图图例 */
+.fin-legend {
+  margin-top: 12rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+.fin-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 22rpx;
+}
+.fin-legend__dot {
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 6rpx;
+  flex-shrink: 0;
+}
+.fin-legend__name {
+  flex: 1;
+  color: var(--ink-2);
+}
+.fin-legend__count {
+  color: var(--ink-3);
+}
+.fin-legend__pct {
+  font-weight: 800;
+  color: var(--ink);
+  min-width: 60rpx;
+  text-align: right;
+}

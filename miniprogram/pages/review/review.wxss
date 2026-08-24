@@ -1,0 +1,128 @@
+/* review —— 评价 */
+.review-page {
+  padding-bottom: 60rpx;
+}
+
+.review-target {
+  font-size: 30rpx;
+  font-weight: 600;
+  text-align: center;
+}
+.review-target__name {
+  color: var(--cinnabar);
+}
+.review-sub {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+/* 星级 */
+.star-row {
+  display: flex;
+  justify-content: center;
+  gap: 24rpx;
+  margin: 36rpx 0 8rpx;
+}
+.star-item {
+  font-size: 68rpx;
+  color: rgba(28, 28, 30, 0.12);
+  transition: transform 120ms var(--ease-out);
+  line-height: 1;
+}
+.star-item--on {
+  color: var(--star);
+  text-shadow: 0 4rpx 14rpx rgba(232, 181, 77, 0.5);
+}
+.star-item--sm {
+  font-size: 26rpx;
+  gap: 6rpx;
+}
+
+/* 维度 */
+.dims {
+  margin: 24rpx 0;
+}
+.dim-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 0;
+}
+.dim-row__label {
+  font-size: 25rpx;
+  color: var(--ink-2);
+}
+.dim-row__stars {
+  display: flex;
+  gap: 10rpx;
+}
+.dim-star {
+  font-size: 38rpx;
+  color: rgba(28, 28, 30, 0.12);
+}
+.dim-star--on {
+  color: var(--star);
+}
+
+.textarea {
+  min-height: 140rpx;
+  width: 100%;
+}
+.ph {
+  color: var(--ink-3);
+}
+.submit-btn {
+  margin-top: 28rpx;
+  width: 100%;
+}
+.review-tip {
+  margin-top: 16rpx;
+  font-size: 21rpx;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+/* 我的评价 */
+.mine-item__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+.mine-item__name {
+  font-size: 28rpx;
+  font-weight: 700;
+}
+.mine-item__stars {
+  display: flex;
+  gap: 4rpx;
+}
+.mine-item__dims {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: var(--gold-deep);
+}
+.mine-item__comment {
+  margin-top: 12rpx;
+  font-size: 25rpx;
+  line-height: 1.7;
+  background: rgba(28, 28, 30, 0.04);
+  border-radius: 16rpx;
+  padding: 14rpx 18rpx;
+}
+.mine-item__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14rpx;
+}
+.mine-item__time {
+  font-size: 21rpx;
+  color: var(--ink-3);
+}
+.appeal-link {
+  font-size: 22rpx;
+  color: var(--info);
+}

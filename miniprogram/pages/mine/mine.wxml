@@ -1,0 +1,136 @@
+<view class="page-container mine-page" wx:if="{{user}}">
+  <!-- 用户卡（卡面背景随 cardId 变化） -->
+  <view class="user-card glass-lg fade-up {{user.cardId === 'card_gold' ? 'user-card--gold' : user.cardId === 'card_ink' ? 'user-card--ink' : ''}}">
+    <view class="user-card__top">
+      <view class="user-card__avatar-wrap">
+        <image wx:if="{{user.avatarUrl}}" class="user-card__avatar" src="{{user.avatarUrl}}" mode="aspectFill" />
+        <view wx:else class="user-card__avatar user-card__avatar--placeholder">{{user.nickname[0]}}</view>
+      </view>
+      <view class="user-card__info">
+        <view class="user-card__name">{{user.nickname}}</view>
+        <view class="user-card__title" wx:if="{{equippedTitle}}">
+          <text class="badge badge--gold">{{equippedTitle.icon}} {{equippedTitle.name}}</text>
+        </view>
+        <view class="user-card__bio ellipsis" wx:if="{{user.bio}}">{{user.bio}}</view>
+      </view>
+      <view class="user-card__edit" hover-class="user-card__edit--active" bindtap="goProfile">✎</view>
+    </view>
+    <view class="user-card__meta" wx:if="{{cardName}}">卡面：{{cardName}}</view>
+  </view>
+
+  <!-- 余额卡 -->
+  <view class="glass-card fade-up stagger-1 balance-card">
+    <view class="balance-card__row">
+      <view class="balance-card__item" hover-class="balance-card__item--active" bindtap="goWallet">
+        <view class="coin coin--lg coin--silver"></view>
+        <view class="balance-card__body">
+          <view class="balance-card__num">{{user.silver}}</view>
+          <view class="balance-card__label">白银</view>
+        </view>
+      </view>
+      <view class="balance-card__divider"></view>
+      <view class="balance-card__item" hover-class="balance-card__item--active" bindtap="goWallet">
+        <view class="coin coin--lg coin--gold"></view>
+        <view class="balance-card__body">
+          <view class="balance-card__num">{{user.gold}}</view>
+          <view class="balance-card__label">黄金</view>
+        </view>
+      </view>
+    </view>
+    <view class="balance-card__actions">
+      <button class="pill-btn pill-btn--primary pill-btn--sm" hover-class="pill-btn--active" bindtap="goWallet">充值 / 兑换</button>
+      <text class="balance-card__hint">1金 = 100银 · 兑换不扣税</text>
+    </view>
+  </view>
+
+  <!-- 数据网格 -->
+  <view class="glass-card fade-up stagger-2 stats-card">
+    <view wx:for="{{stats}}" wx:key="label" class="stats-card__item">
+      <view class="stats-card__value">{{item.value}}</view>
+      <view class="stats-card__label">{{item.label}}</view>
+    </view>
+  </view>
+
+  <!-- 账号状态 -->
+  <view class="glass-card fade-up stagger-3 account-card" hover-class="account-card--active" bindtap="goAccount">
+    <view class="account-card__icon">{{user.userId ? '🪪' : '✍️'}}</view>
+    <view class="account-card__body">
+      <view class="account-card__label">{{user.userId ? '江湖账号' : '尚未注册账号'}}</view>
+      <view class="account-card__value">{{user.userId ? user.userId : '注册后可发布委托 / 接单 / 聊天'}}</view>
+    </view>
+    <text class="account-card__arrow">›</text>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="glass-card fade-up stagger-3 menu-card">
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goUserHome">
+      <text class="menu-item__icon">🏠</text>
+      <text class="menu-item__label">个人主页（三榜数值）</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goReviews">
+      <text class="menu-item__icon">⭐</text>
+      <text class="menu-item__label">我的评价</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goDrafts">
+      <text class="menu-item__icon">📝</text>
+      <text class="menu-item__label">草稿箱</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goNotify">
+      <text class="menu-item__icon">🔔</text>
+      <text class="menu-item__label">站内通知</text>
+      <view class="menu-item__badge" wx:if="{{unreadCount > 0}}">{{unreadCount > 99 ? '99+' : unreadCount}}</view>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goAdmin" wx:if="{{user.adminLevel >= 1}}">
+      <text class="menu-item__icon">🛡️</text>
+      <text class="menu-item__label">管理面板</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goRecharge">
+      <text class="menu-item__icon">📱</text>
+      <text class="menu-item__label">扫码充值</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goChatList">
+      <text class="menu-item__icon">💬</text>
+      <text class="menu-item__label">客服会话</text>
+      <view class="menu-item__badge" wx:if="{{chatUnread > 0}}">{{chatUnread > 99 ? '99+' : chatUnread}}</view>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goOrders">
+      <text class="menu-item__icon">📜</text>
+      <text class="menu-item__label">我的委托</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goTitles">
+      <text class="menu-item__icon">🏅</text>
+      <text class="menu-item__label">我的称号</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goShop">
+      <text class="menu-item__icon">🏪</text>
+      <text class="menu-item__label">称号商城</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goAI">
+      <text class="menu-item__icon">🤖</text>
+      <text class="menu-item__label">AI 助手</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goWallet">
+      <text class="menu-item__icon">👛</text>
+      <text class="menu-item__label">钱包与流水</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
+    <view class="menu-item" hover-class="menu-item--active" bindtap="goProfile">
+      <text class="menu-item__icon">👤</text>
+      <text class="menu-item__label">编辑资料</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
+  </view>
+
+  <view class="mine-footer">生活…即是江湖…</view>
+</view>

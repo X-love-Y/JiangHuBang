@@ -1,0 +1,81 @@
+<view class="page-container wallet-page" wx:if="{{user}}">
+  <!-- 余额卡 -->
+  <view class="glass-card fade-up balance-card">
+    <view class="balance-card__item">
+      <view class="coin coin--lg coin--silver"></view>
+      <view>
+        <view class="balance-card__num">{{user.silver}}</view>
+        <view class="balance-card__label">白银余额</view>
+      </view>
+    </view>
+    <view class="balance-card__divider"></view>
+    <view class="balance-card__item">
+      <view class="coin coin--lg coin--gold"></view>
+      <view>
+        <view class="balance-card__num">{{user.gold}}</view>
+        <view class="balance-card__label">黄金余额</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 充值 -->
+  <view class="section-title">充值白银</view>
+  <view class="glass-card fade-up stagger-1">
+    <view class="plan-grid">
+      <view
+        wx:for="{{rechargePlans}}" wx:key="rmb"
+        class="plan {{activePlan === index ? 'plan--on' : ''}}"
+        hover-class="plan--active" data-i="{{index}}" bindtap="pickPlan"
+      >
+        <view class="plan__silver">{{item.silver}} 银</view>
+        <view class="plan__rmb">¥{{item.rmb}}</view>
+      </view>
+    </view>
+    <view class="channel-row">
+      <view
+        wx:for="{{payChannels}}" wx:key="code"
+        class="chip {{activeChannel === item.code ? 'chip--on' : ''}}"
+        hover-class="chip--active" data-code="{{item.code}}" bindtap="pickChannel"
+      >{{item.name}}</view>
+    </view>
+    <view class="channel-hint" wx:for="{{payChannels}}" wx:key="code"
+      wx:if="{{activeChannel === item.code && item.hint}}">💡 {{item.hint}}</view>
+    <button class="pill-btn pill-btn--primary recharge-btn" hover-class="pill-btn--active" bindtap="doRecharge">
+      充值 ¥{{rechargePlans[activePlan].rmb}} → {{rechargePlans[activePlan].silver}} 白银
+    </button>
+  </view>
+
+  <!-- 兑换 -->
+  <view class="section-title">兑换 <text class="section-sub">1 金 = 100 银 · 双向兑换不扣税</text></view>
+  <view class="glass-card fade-up stagger-2">
+    <view class="currency-seg">
+      <view class="seg {{exchangeDir === 'toGold' ? 'seg--on' : ''}}"
+        hover-class="seg--active" data-dir="toGold" bindtap="switchDir"><view class="coin coin--sm coin--silver"></view><text class="seg__label">→</text><view class="coin coin--sm coin--gold"></view><text class="seg__label">银换金</text></view>
+      <view class="seg {{exchangeDir === 'toSilver' ? 'seg--on' : ''}}"
+        hover-class="seg--active" data-dir="toSilver" bindtap="switchDir"><view class="coin coin--sm coin--gold"></view><text class="seg__label">→</text><view class="coin coin--sm coin--silver"></view><text class="seg__label">金换银</text></view>
+    </view>
+    <view class="exchange-row">
+      <input class="glass-input exchange-input" type="number"
+        placeholder="输入{{exchangeDir === 'toGold' ? '白银' : '黄金'}}数量"
+        placeholder-class="ph" value="{{exchangeAmount}}" bindinput="onExchangeInput" />
+    </view>
+    <view class="exchange-preview" wx:if="{{exchangePreview}}">{{exchangePreview}}</view>
+    <button class="pill-btn pill-btn--ghost exchange-btn" hover-class="pill-btn--active" bindtap="doExchange">立即兑换</button>
+  </view>
+
+  <!-- 流水 -->
+  <view class="section-title">资金流水</view>
+  <view class="glass-card fade-up stagger-3 tx-card">
+    <view wx:for="{{txList}}" wx:key="_id" class="tx-item">
+      <view class="tx-item__icon">{{item.isPlus ? '↗' : '↘'}}</view>
+      <view class="tx-item__body">
+        <view class="tx-item__remark">{{item.remark}}</view>
+        <view class="tx-item__time">{{item.timeText}}</view>
+      </view>
+      <view class="tx-item__amount {{item.isPlus ? 'tx-item__amount--plus' : ''}}">
+        {{item.isPlus ? '+' : ''}}{{item.amount}} {{item.currency === 'gold' ? '金' : '银'}}
+      </view>
+    </view>
+    <empty-state wx:if="{{!txList.length}}" icon="🍂" text="暂无资金流水" />
+  </view>
+</view>

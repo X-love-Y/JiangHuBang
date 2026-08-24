@@ -1,0 +1,14 @@
+<view class="dialog-mask" wx:if="{{show}}" catchtouchmove="noop" bindtap="onCancel">
+  <view class="dialog glass" catchtap="noop">
+    <view class="dialog__title">{{title}}</view>
+    <view class="dialog__content" wx:if="{{content}}">{{content}}</view>
+    <view class="dialog__actions">
+      <button class="pill-btn pill-btn--ghost pill-btn--sm dialog__btn" hover-class="pill-btn--active" bindtap="onCancel">{{cancelText}}</button>
+      <button
+        class="pill-btn {{danger ? 'pill-btn--danger' : 'pill-btn--primary'}} pill-btn--sm dialog__btn"
+        hover-class="pill-btn--active"
+        bindtap="onConfirm"
+      >{{confirmText}}</button>
+    </view>
+  </view>
+</view>

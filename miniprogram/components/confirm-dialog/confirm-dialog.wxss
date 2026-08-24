@@ -1,0 +1,56 @@
+.dialog-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 28, 30, 0.32);
+  backdrop-filter: blur(8rpx);
+  -webkit-backdrop-filter: blur(8rpx);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  animation: maskIn 200ms ease-out both;
+}
+@keyframes maskIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.dialog {
+  width: 600rpx;
+  padding: 48rpx 40rpx 40rpx;
+  border-radius: var(--radius-card-lg);
+  box-shadow: var(--shadow-float), var(--shadow-inset);
+  animation: dialogIn 240ms var(--ease-out) both;
+  box-sizing: border-box;
+}
+@keyframes dialogIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(24rpx);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.dialog__title {
+  font-size: 34rpx;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 2rpx;
+}
+.dialog__content {
+  margin-top: 20rpx;
+  font-size: 26rpx;
+  color: var(--ink-2);
+  text-align: center;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+.dialog__actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 44rpx;
+}
+.dialog__btn {
+  flex: 1;
+}

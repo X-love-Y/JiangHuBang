@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "钱包",
+  "usingComponents": {
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

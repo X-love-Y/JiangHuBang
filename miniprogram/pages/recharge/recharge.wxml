@@ -1,0 +1,24 @@
+<view class="page-container recharge-page">
+  <view class="section-title">选择充值金额</view>
+  <view class="glass-card fade-up">
+    <view class="plan-grid">
+      <view wx:for="{{plans}}" wx:key="rmb"
+        class="plan {{activePlan === index ? 'plan--on' : ''}}"
+        hover-class="plan--active" data-i="{{index}}" bindtap="pickPlan">
+        <view class="plan__silver">{{item.silver}} 银</view>
+        <view class="plan__rmb">¥{{item.rmb}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-title">模拟收款码</view>
+  <view class="glass-card fade-up stagger-1 qr-card">
+    <canvas type="2d" id="qrcode" class="qr-canvas"></canvas>
+    <view class="qr-hint">· 模拟通道 · 开发阶段点击下方按钮即视为扫码支付成功</view>
+    <view class="qr-order">订单号 {{orderNo}}</view>
+    <button class="pill-btn pill-btn--primary pay-btn" hover-class="pill-btn--active" bindtap="doPay">
+      我已完成支付 ¥{{plans[activePlan].rmb}}
+    </button>
+    <view class="qr-tip">真实微信支付接入后，此处将展示真实收款码（云端下单 → 扫码支付 → 回调入账）</view>
+  </view>
+</view>

@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "寻找委托",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "star-bar": "/components/star-bar/star-bar",
+    "empty-state": "/components/empty-state/empty-state",
+    "status-badge": "/components/status-badge/status-badge"
+  }
+}

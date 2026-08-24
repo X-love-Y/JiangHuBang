@@ -1,0 +1,28 @@
+<view class="page-container profile-page" wx:if="{{user}}">
+  <!-- 头像 -->
+  <view class="glass-card fade-up avatar-card">
+    <view class="field__label">头像</view>
+    <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+      <image wx:if="{{avatarUrl}}" class="avatar-img" src="{{avatarUrl}}" mode="aspectFill" />
+      <view wx:else class="avatar-img avatar-img--placeholder">{{nickname[0] || '侠'}}</view>
+      <view class="avatar-btn__hint">点击更换</view>
+    </button>
+  </view>
+
+  <!-- 昵称 / 简介 -->
+  <view class="glass-card fade-up stagger-1 form-card">
+    <view class="field">
+      <view class="field__label">昵称</view>
+      <input class="glass-input" type="nickname" placeholder="你的江湖名号" placeholder-class="ph"
+        maxlength="16" value="{{nickname}}" bindinput="onNicknameInput" />
+    </view>
+    <view class="field">
+      <view class="field__label">简介</view>
+      <textarea class="glass-input textarea" placeholder="一句话介绍自己（最多 100 字）"
+        placeholder-class="ph" maxlength="100" value="{{bio}}" bindinput="onBioInput" auto-height />
+    </view>
+  </view>
+
+  <button class="pill-btn pill-btn--primary save-btn {{saving ? 'pill-btn--disabled' : ''}}"
+    hover-class="pill-btn--active" bindtap="save">保存资料</button>
+</view>

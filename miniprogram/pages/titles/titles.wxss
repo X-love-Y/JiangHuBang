@@ -1,0 +1,128 @@
+/* titles —— 我的称号 */
+.titles-page {
+  padding-bottom: 60rpx;
+}
+
+/* 进度卡 */
+.progress-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24rpx;
+}
+.progress-card__label {
+  font-size: 24rpx;
+  color: var(--ink-2);
+}
+.progress-card__num {
+  font-size: 52rpx;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.progress-card__unit {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.progress-card__next {
+  text-align: right;
+}
+.progress-card__next-label {
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+.progress-card__next-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  margin-top: 4rpx;
+}
+.progress-card__next-cond {
+  font-size: 22rpx;
+  color: var(--cinnabar);
+  margin-top: 4rpx;
+}
+.progress-track {
+  margin-top: 28rpx;
+  height: 16rpx;
+  border-radius: var(--radius-pill);
+  background: rgba(28, 28, 30, 0.07);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, #E8B54D, #C9A227);
+  box-shadow: 0 4rpx 14rpx rgba(201, 162, 39, 0.35);
+  transition: width 500ms var(--ease-out);
+}
+
+/* 称号行 */
+.owned-card {
+  display: flex;
+  flex-direction: column;
+  padding: 8rpx 32rpx;
+}
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+  padding: 26rpx 0;
+  border-bottom: 1rpx solid rgba(28, 28, 30, 0.05);
+}
+.title-row:last-child {
+  border-bottom: none;
+}
+.title-row--equipped {
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.08), transparent 70%);
+  margin: 0 -16rpx;
+  padding-left: 16rpx;
+  padding-right: 16rpx;
+  border-radius: 24rpx;
+}
+.title-row--locked {
+  opacity: 0.55;
+}
+.title-row__icon {
+  font-size: 48rpx;
+  flex-shrink: 0;
+}
+.title-row__icon--locked {
+  filter: grayscale(1);
+}
+.title-row__info {
+  flex: 1;
+  min-width: 0;
+}
+.title-row__name {
+  font-size: 29rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.title-row__badge {
+  transform: scale(0.9);
+}
+.title-row__desc {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  margin-top: 4rpx;
+}
+.title-row__progress {
+  font-size: 24rpx;
+  color: var(--ink-2);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.owned-empty {
+  padding: 40rpx 0;
+  text-align: center;
+  font-size: 23rpx;
+  color: var(--ink-3);
+}
+
+.titles-cta {
+  margin-top: 40rpx;
+  width: 100%;
+}

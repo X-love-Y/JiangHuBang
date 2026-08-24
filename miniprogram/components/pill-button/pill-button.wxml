@@ -1,0 +1,8 @@
+<button
+  class="pill-btn pill-btn--{{type}} {{size === 'sm' ? 'pill-btn--sm' : ''}} {{disabled ? 'pill-btn--disabled' : ''}}"
+  hover-class="pill-btn--active"
+  hover-stay-time="100"
+  bindtap="onTap"
+>
+  {{text}}<slot />
+</button>

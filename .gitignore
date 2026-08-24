@@ -1,0 +1,16 @@
+# Node.js
+node_modules/
+
+# 微信开发者工具私有配置（含个人账号信息）
+project.private.config.json
+
+# 本地个人工具配置
+.claude/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志与临时文件
+*.log
+*.tmp

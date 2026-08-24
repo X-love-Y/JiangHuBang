@@ -1,0 +1,243 @@
+/* mine —— 我的 */
+.mine-page {
+  padding-bottom: 60rpx;
+}
+
+/* 用户卡 */
+.user-card {
+  padding: 40rpx 36rpx;
+  position: relative;
+  overflow: hidden;
+  transition: background 300ms;
+}
+.user-card--gold {
+  background: linear-gradient(150deg, rgba(255, 243, 214, 0.95), rgba(255, 255, 255, 0.85) 55%, rgba(201, 162, 39, 0.18));
+  border: 1rpx solid rgba(201, 162, 39, 0.30);
+}
+.user-card--ink {
+  background: linear-gradient(150deg, rgba(232, 234, 240, 0.96), rgba(255, 255, 255, 0.85) 60%, rgba(28, 28, 30, 0.10));
+  border: 1rpx solid rgba(28, 28, 30, 0.14);
+}
+.user-card__top {
+  display: flex;
+  align-items: center;
+  gap: 26rpx;
+}
+.user-card__avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  box-shadow: 0 10rpx 26rpx rgba(31, 35, 55, 0.16);
+}
+.user-card__avatar--placeholder {
+  background: linear-gradient(135deg, #D8DBE4, #C2C7D4);
+  color: #FFF;
+  font-size: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user-card__info {
+  flex: 1;
+  min-width: 0;
+}
+.user-card__name {
+  font-size: 36rpx;
+  font-weight: 800;
+}
+.user-card__title {
+  margin-top: 10rpx;
+}
+.user-card__bio {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: var(--ink-3);
+}
+.user-card__edit {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  color: var(--ink-2);
+  box-shadow: var(--shadow-soft);
+  transition: transform 150ms var(--ease-out);
+}
+.user-card__edit--active {
+  transform: scale(0.9);
+}
+.user-card__meta {
+  margin-top: 20rpx;
+  font-size: 22rpx;
+  color: var(--ink-3);
+  letter-spacing: 1rpx;
+}
+
+/* 余额卡 */
+.balance-card {
+  margin-top: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+.balance-card__row {
+  display: flex;
+  align-items: center;
+}
+.balance-card__item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18rpx;
+  padding: 12rpx 0;
+  border-radius: 32rpx;
+  transition: transform 150ms var(--ease-out);
+}
+.balance-card__item--active {
+  transform: scale(0.97);
+}
+.balance-card__icon {
+  font-size: 44rpx;
+}
+.balance-card__num {
+  font-size: 40rpx;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.balance-card__label {
+  font-size: 23rpx;
+  color: var(--ink-2);
+}
+.balance-card__divider {
+  width: 1rpx;
+  height: 64rpx;
+  background: rgba(28, 28, 30, 0.08);
+}
+.balance-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.balance-card__hint {
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+
+/* 数据网格 */
+.stats-card {
+  margin-top: 24rpx;
+  display: flex;
+}
+.stats-card__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+.stats-card__value {
+  font-size: 38rpx;
+  font-weight: 800;
+}
+.stats-card__label {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  letter-spacing: 1rpx;
+}
+
+/* 账号状态 */
+.account-card {
+  margin-top: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+  padding: 28rpx 32rpx;
+  transition: transform 150ms var(--ease-out);
+}
+.account-card--active {
+  transform: scale(0.98);
+}
+.account-card__icon {
+  font-size: 44rpx;
+}
+.account-card__body {
+  flex: 1;
+  min-width: 0;
+}
+.account-card__label {
+  font-size: 28rpx;
+  font-weight: 700;
+}
+.account-card__value {
+  font-size: 23rpx;
+  color: var(--ink-3);
+  margin-top: 4rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.account-card__arrow {
+  color: var(--ink-3);
+  font-size: 36rpx;
+}
+
+/* 菜单 */
+.menu-card {
+  margin-top: 24rpx;
+  padding: 8rpx 32rpx;
+  display: flex;
+  flex-direction: column;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  padding: 30rpx 0;
+  border-bottom: 1rpx solid rgba(28, 28, 30, 0.05);
+  border-radius: 20rpx;
+  transition: background 150ms;
+}
+.menu-item:last-child {
+  border-bottom: none;
+}
+.menu-item--active {
+  background: rgba(28, 28, 30, 0.03);
+}
+.menu-item__icon {
+  font-size: 36rpx;
+}
+.menu-item__label {
+  flex: 1;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+.menu-item__arrow {
+  color: var(--ink-3);
+  font-size: 36rpx;
+}
+.menu-item__badge {
+  min-width: 36rpx;
+  height: 36rpx;
+  border-radius: var(--radius-pill);
+  background: var(--cinnabar);
+  color: #FFF;
+  font-size: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10rpx;
+  box-sizing: border-box;
+}
+
+.mine-footer {
+  text-align: center;
+  font-family: "Noto Serif SC", "STKaiti", "KaiTi", serif;
+  font-size: 24rpx;
+  color: var(--ink-3);
+  letter-spacing: 6rpx;
+  padding: 48rpx 0 16rpx;
+}

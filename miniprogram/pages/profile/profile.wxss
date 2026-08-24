@@ -1,0 +1,72 @@
+/* profile —— 编辑资料 */
+.profile-page {
+  padding-bottom: 60rpx;
+}
+
+.avatar-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+.field__label {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--ink-2);
+  letter-spacing: 1rpx;
+}
+.avatar-btn {
+  background: transparent;
+  padding: 0;
+  border: none;
+  line-height: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+.avatar-btn::after {
+  border: none;
+}
+.avatar-img {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
+  box-shadow: 0 12rpx 32rpx rgba(31, 35, 55, 0.16);
+}
+.avatar-img--placeholder {
+  background: linear-gradient(135deg, #D8DBE4, #C2C7D4);
+  color: #FFF;
+  font-size: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-btn__hint {
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+
+.form-card {
+  margin-top: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 36rpx;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+}
+.textarea {
+  min-height: 140rpx;
+  width: 100%;
+}
+.ph {
+  color: var(--ink-3);
+}
+
+.save-btn {
+  margin-top: 40rpx;
+  width: 100%;
+}

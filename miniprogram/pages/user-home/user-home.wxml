@@ -1,0 +1,75 @@
+<view class="page-container user-home" wx:if="{{profile}}">
+  <!-- 用户卡 -->
+  <view class="glass-card user-card fade-up {{profile.cardId === 'card_gold' ? 'user-card--gold' : profile.cardId === 'card_ink' ? 'user-card--ink' : ''}}">
+    <view class="user-card__top">
+      <view class="user-card__avatar-wrap">
+        <image wx:if="{{profile.avatarUrl}}" class="user-card__avatar" src="{{profile.avatarUrl}}" mode="aspectFill" />
+        <view wx:else class="user-card__avatar user-card__avatar--placeholder">{{profile.nickname[0]}}</view>
+      </view>
+      <view class="user-card__info">
+        <view class="user-card__name">{{profile.nickname}}</view>
+        <view class="user-card__title" wx:if="{{profile.titleName}}">
+          <text class="badge badge--gold">{{profile.titleIcon}} {{profile.titleName}}</text>
+        </view>
+        <view class="user-card__bio" wx:if="{{profile.bio}}">{{profile.bio}}</view>
+        <view class="user-card__meta" wx:if="{{profile.userId}}">ID：{{profile.userId}}</view>
+      </view>
+      <button wx:if="{{!profile.isSelf}}" class="pill-btn pill-btn--primary pill-btn--sm"
+        hover-class="pill-btn--active" bindtap="contactTa">联系 ta</button>
+    </view>
+    <view class="user-card__rating" wx:if="{{profile.reviewCount}}">
+      <text class="rating-star">★</text>
+      <text class="rating-num">{{profile.avgStar}}</text>
+      <text class="rating-count">（{{profile.reviewCount}} 条评价）</text>
+    </view>
+  </view>
+
+  <!-- 三值三角图 -->
+  <view class="glass-card fade-up stagger-1 radar-card" wx:if="{{profile.rep !== null}}">
+    <view class="section-label">三榜数值</view>
+    <canvas type="2d" id="radar" class="radar-canvas"></canvas>
+  </view>
+  <view class="glass-card fade-up stagger-1 radar-locked" wx:else>
+    🔒 该用户隐藏了三榜数值
+  </view>
+
+  <!-- 统计 -->
+  <view class="glass-card fade-up stagger-2 stats-card" wx:if="{{profile.stats}}">
+    <view class="stats-card__item">
+      <view class="stats-card__value">{{profile.stats.completed || 0}}</view>
+      <view class="stats-card__label">完成委托</view>
+    </view>
+    <view class="stats-card__item">
+      <view class="stats-card__value">{{profile.stats.published || 0}}</view>
+      <view class="stats-card__label">发布委托</view>
+    </view>
+    <view class="stats-card__item">
+      <view class="stats-card__value">{{profile.stats.totalEarnedSilver || 0}}</view>
+      <view class="stats-card__label">赚得白银</view>
+    </view>
+  </view>
+
+  <!-- 最近完成 -->
+  <view class="glass-card fade-up stagger-3" wx:if="{{profile.completedList.length}}">
+    <view class="section-label">最近完成</view>
+    <view class="done-item" wx:for="{{profile.completedList}}" wx:key="_id"
+      hover-class="done-item--active" data-id="{{item._id}}" bindtap="goDetail">
+      <view class="done-item__title ellipsis">{{item.title}}</view>
+      <view class="done-item__right">
+        <text class="done-item__star">{{item.star}}★</text>
+        <text class="done-item__amount">{{item.amountText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 隐私设置（仅本人） -->
+  <view class="glass-card fade-up stagger-4" wx:if="{{profile.isSelf}}">
+    <view class="section-label">主页展示设置</view>
+    <view class="privacy-item" wx:for="{{[['showThree','三榜数值'],['showStats','委托统计'],['showTitles','佩戴称号'],['showCompleted','完成记录']]}}" wx:key="*this">
+      <text class="privacy-item__label">{{item[1]}}</text>
+      <switch checked="{{profile.privacy[item[0]]}}" color="#C9A227"
+        data-key="{{item[0]}}" bindchange="onPrivacyChange" />
+    </view>
+    <view class="privacy-hint">余额、密码等敏感信息永不展示</view>
+  </view>
+</view>

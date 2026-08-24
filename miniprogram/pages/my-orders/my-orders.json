@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "我的委托",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "status-badge": "/components/status-badge/status-badge",
+    "star-bar": "/components/star-bar/star-bar",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

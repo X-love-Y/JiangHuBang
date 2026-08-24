@@ -1,0 +1,16 @@
+<view class="splash blob-bg">
+  <!-- 柔和环境光斑 -->
+  <view class="blob blob--a"></view>
+  <view class="blob blob--b"></view>
+  <view class="blob blob--c"></view>
+
+  <!-- 竖排标语：生活…即是江湖… -->
+  <view class="splash__text">
+    <text
+      wx:for="{{chars}}"
+      wx:key="index"
+      class="splash__char"
+      style="animation-delay: {{delays[index]}}"
+    >{{item}}</text>
+  </view>
+</view>

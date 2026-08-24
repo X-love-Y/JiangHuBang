@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "客服会话",
+  "usingComponents": {
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

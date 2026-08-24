@@ -1,0 +1,231 @@
+/* mixins.wxss —— 通用样式类：玻璃卡 / 胶囊按钮 / 徽章 / 装饰光斑背景 */
+
+/* ===== 玻璃悬浮卡片（Squircle 超大圆角 + 磨砂 + 内高光） ===== */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
+}
+
+.glass-lg {
+  border-radius: var(--radius-card-lg);
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
+  padding: var(--card-pad);
+  box-sizing: border-box;
+}
+
+/* ===== 胶囊按钮 ===== */
+.pill-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96rpx;
+  border-radius: var(--radius-pill);
+  font-size: 30rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  transition: transform 150ms var(--ease-out), box-shadow 150ms var(--ease-out),
+    opacity 150ms var(--ease-out);
+  border: none;
+  line-height: 1;
+  padding: 0 48rpx;
+  box-sizing: border-box;
+}
+.pill-btn::after {
+  border: none; /* 去除原生 button 边框 */
+}
+
+/* 主按钮：墨黑底白字 */
+.pill-btn--primary {
+  background: linear-gradient(135deg, #2A2A2E 0%, #1C1C1E 100%);
+  color: #FFFFFF;
+  box-shadow: 0 10rpx 28rpx rgba(28, 28, 30, 0.22), var(--shadow-inset);
+}
+
+/* 次按钮：玻璃底墨字 */
+.pill-btn--ghost {
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1rpx solid rgba(255, 255, 255, 0.9);
+  color: var(--ink);
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
+}
+
+/* 危险按钮：朱砂底 */
+.pill-btn--danger {
+  background: linear-gradient(135deg, #D35E4C 0%, #B8443A 100%);
+  color: #FFFFFF;
+  box-shadow: 0 10rpx 28rpx rgba(194, 75, 58, 0.25);
+}
+
+/* 金按钮：黄金底 */
+.pill-btn--gold {
+  background: linear-gradient(135deg, #DDB84A 0%, #C9A227 100%);
+  color: #FFFFFF;
+  box-shadow: 0 10rpx 28rpx rgba(201, 162, 39, 0.30);
+}
+
+/* 小号胶囊按钮 */
+.pill-btn--sm {
+  height: 64rpx;
+  font-size: 26rpx;
+  padding: 0 32rpx;
+  font-weight: 500;
+}
+
+/* 按压反馈 */
+.pill-btn--active {
+  transform: scale(0.97);
+  box-shadow: 0 4rpx 12rpx rgba(31, 35, 55, 0.06);
+  opacity: 0.92;
+}
+
+.pill-btn--disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* ===== 徽章 ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rpx 20rpx;
+  border-radius: var(--radius-pill);
+  font-size: 22rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  line-height: 1.5;
+}
+
+.badge--gold {
+  background: var(--gold-soft);
+  color: var(--gold-deep);
+}
+
+.badge--silver {
+  background: var(--silver-soft);
+  color: #5F5F66;
+}
+
+.badge--ink {
+  background: rgba(28, 28, 30, 0.06);
+  color: var(--ink-2);
+}
+
+.badge--cinnabar {
+  background: var(--cinnabar-soft);
+  color: var(--cinnabar);
+}
+
+.badge--success {
+  background: rgba(59, 165, 93, 0.12);
+  color: var(--success);
+}
+
+.badge--info {
+  background: rgba(74, 123, 208, 0.12);
+  color: var(--info);
+}
+
+/* ===== 装饰光斑背景（柔和环境光） ===== */
+.blob-bg {
+  position: relative;
+  overflow: hidden;
+}
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90rpx);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== 卡片入场动效 ===== */
+.fade-up {
+  animation: fadeUp 300ms var(--ease-out) both;
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 列表 stagger 延迟 */
+.stagger-1 { animation-delay: 40ms; }
+.stagger-2 { animation-delay: 80ms; }
+.stagger-3 { animation-delay: 120ms; }
+.stagger-4 { animation-delay: 160ms; }
+.stagger-5 { animation-delay: 200ms; }
+.stagger-6 { animation-delay: 240ms; }
+
+/* ===== 表单玻璃输入 ===== */
+.glass-input {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1rpx solid rgba(255, 255, 255, 0.9);
+  border-radius: 28rpx;
+  box-shadow: inset 0 2rpx 6rpx rgba(31, 35, 55, 0.04);
+  padding: 24rpx 28rpx;
+  font-size: 28rpx;
+  color: var(--ink);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 88rpx; /* 未聚焦时也保持完整高度，防止内容裁切 */
+}
+/* 原生 input：高度=行高、去掉上下内边距 → 占位符与输入文字始终垂直居中，
+   聚焦前后位置一致，避免文字/占位符跳动 */
+input.glass-input {
+  height: 88rpx;
+  line-height: 88rpx;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+textarea.glass-input {
+  min-height: 160rpx;
+  line-height: 1.6;
+}
+
+/* ===== 货币图标（银圆币 / 金元宝） ===== */
+.coin {
+  display: inline-block;
+  width: 40rpx;
+  height: 40rpx;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  vertical-align: middle;
+}
+.coin--silver {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iMjAiIGZpbGw9IiNDOUNERDQiLz48Y2lyY2xlIGN4PSIyNCIgY3k9IjI0IiByPSIxNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQTZBQkI1IiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTQgMTYgUTIwIDEwIDMwIDE0IiBzdHJva2U9IiNFREYwRjQiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzlBQTBBQSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48L3N2Zz4=");
+}
+.coin--gold {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZD0iTTggMjggUTggMTggMTYgMTggTDIwIDE0IFEyNCAxMSAyOCAxNCBMMzIgMTggUTQwIDE4IDQwIDI4IFE0MCAzNiAzNCAzOCBMMTQgMzggUTggMzYgOCAyOCBaIiBmaWxsPSIjRTNCNzNDIi8+PHBhdGggZD0iTTggMjggUTI0IDM0IDQwIDI4IiBzdHJva2U9IiNDOUEyMjciIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xNCAyMSBRMTkgMTcgMjYgMTYiIHN0cm9rZT0iI0Y3RTdBOCIgc3Ryb2tlLXdpZHRoPSIzIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZWxsaXBzZSBjeD0iMjQiIGN5PSIzNyIgcng9IjE0IiByeT0iMyIgZmlsbD0iI0I4OTQxRiIgb3BhY2l0eT0iMC41Ii8+PC9zdmc+");
+}
+.coin--lg {
+  width: 56rpx;
+  height: 56rpx;
+}
+.coin--sm {
+  width: 30rpx;
+  height: 30rpx;
+}

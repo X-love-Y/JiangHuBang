@@ -1,0 +1,65 @@
+<view class="page-container titles-page" wx:if="{{user}}">
+  <!-- 成就进度 -->
+  <view class="glass-card fade-up progress-card">
+    <view class="progress-card__top">
+      <view>
+        <view class="progress-card__label">累计完成委托</view>
+        <view class="progress-card__num">{{user.stats.completed}} <text class="progress-card__unit">单</text></view>
+      </view>
+      <view class="progress-card__next" wx:if="{{nextTitle}}">
+        <view class="progress-card__next-label">下一成就</view>
+        <view class="progress-card__next-name">{{nextTitle.icon}} {{nextTitle.name}}</view>
+        <view class="progress-card__next-cond">还需完成 {{nextTitle.condition.value - user.stats.completed}} 单</view>
+      </view>
+      <view class="progress-card__next" wx:else>
+        <view class="progress-card__next-label">登峰造极</view>
+        <view class="progress-card__next-name">👑 全部成就已达成</view>
+      </view>
+    </view>
+    <view class="progress-track">
+      <view class="progress-fill" style="width: {{progress}}%"></view>
+    </view>
+  </view>
+
+  <!-- 已拥有称号 -->
+  <view class="section-title">已拥有称号</view>
+  <view class="glass-card fade-up stagger-1 owned-card">
+    <view wx:for="{{ownedTitles}}" wx:key="titleId"
+      class="title-row {{equippedTitleId === item.titleId ? 'title-row--equipped' : ''}}">
+      <text class="title-row__icon">{{item.icon}}</text>
+      <view class="title-row__info">
+        <view class="title-row__name">{{item.name}}
+          <text wx:if="{{item.source === 'shop'}}" class="badge badge--gold title-row__badge">商城</text>
+          <text wx:else class="badge badge--ink title-row__badge">成就</text>
+        </view>
+        <view class="title-row__desc">{{item.desc}}</view>
+      </view>
+      <button wx:if="{{equippedTitleId !== item.titleId}}"
+        class="pill-btn pill-btn--ghost pill-btn--sm" hover-class="pill-btn--active"
+        data-id="{{item.titleId}}" bindtap="equip">佩戴</button>
+      <text wx:else class="badge badge--success">佩戴中</text>
+    </view>
+  </view>
+
+  <!-- 未解锁成就 -->
+  <view class="section-title">未解锁成就</view>
+  <view class="glass-card fade-up stagger-2">
+    <block wx:for="{{allTitles}}" wx:key="titleId">
+      <view wx:if="{{item.source === 'achievement' && !item.owned}}" class="title-row title-row--locked">
+        <text class="title-row__icon title-row__icon--locked">{{item.icon}}</text>
+        <view class="title-row__info">
+          <view class="title-row__name title-row__name--locked">{{item.name}}</view>
+          <view class="title-row__desc">{{item.desc}}</view>
+        </view>
+        <view class="title-row__progress">
+          {{user.stats.completed}} / {{item.condition.value}}
+        </view>
+      </view>
+    </block>
+    <view class="owned-empty" wx:if="{{!allTitles.length}}">暂无成就数据，请先完成 initData 初始化</view>
+  </view>
+
+  <button class="pill-btn pill-btn--primary titles-cta" hover-class="pill-btn--active" bindtap="goShop">
+    去商城看看黄金称号
+  </button>
+</view>

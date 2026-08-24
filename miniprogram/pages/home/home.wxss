@@ -1,0 +1,136 @@
+/* home —— 主页：玻璃拟态四按钮布局（2 竖排矩形 + 2 圆形） */
+page {
+  background: #F2F3F7;
+}
+
+.home {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(160deg, #F7F8FB 0%, #EDEFF4 50%, #E9EBF1 100%);
+  overflow: hidden;
+}
+
+.blob--a {
+  width: 620rpx;
+  height: 620rpx;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.13), transparent 70%);
+  top: -160rpx;
+  right: -200rpx;
+}
+.blob--b {
+  width: 700rpx;
+  height: 700rpx;
+  background: radial-gradient(circle, rgba(74, 123, 208, 0.09), transparent 70%);
+  bottom: -220rpx;
+  left: -240rpx;
+}
+.blob--c {
+  width: 460rpx;
+  height: 460rpx;
+  background: radial-gradient(circle, rgba(194, 75, 58, 0.07), transparent 70%);
+  top: 34%;
+  right: -140rpx;
+}
+
+.home__body {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 72rpx;
+  box-sizing: border-box;
+  padding: 40rpx 0;
+}
+
+/* ===== 上方竖排矩形按钮 ===== */
+.home__rects {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32rpx;
+}
+
+.btn-rect {
+  width: 320rpx;
+  height: 372rpx;
+  border-radius: 56rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28rpx;
+  transition: transform 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+}
+.btn-rect--active {
+  transform: scale(0.97);
+  box-shadow: 0 6rpx 20rpx rgba(31, 35, 55, 0.06);
+}
+
+.btn-rect__icon {
+  width: 96rpx;
+  height: 96rpx;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.92;
+}
+.btn-rect__icon--publish {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMUMxQzFFIiBzdHJva2Utd2lkdGg9IjIuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIyNCIgY3k9IjI0IiByPSIxNyIvPjxwYXRoIGQ9Ik0yNCAxNSBWMzMiLz48cGF0aCBkPSJNMTYgMjMgTDI0IDE1IEwzMiAyMyIvPjwvc3ZnPg==");
+}
+.btn-rect__icon--find {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMUMxQzFFIiBzdHJva2Utd2lkdGg9IjIuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48Y2lyY2xlIGN4PSIyMSIgY3k9IjIxIiByPSIxMyIvPjxsaW5lIHgxPSIzMSIgeTE9IjMxIiB4Mj0iNDAiIHkyPSI0MCIvPjwvc3ZnPg==");
+}
+
+.btn-rect__label {
+  font-size: 30rpx;
+  font-weight: 600;
+  letter-spacing: 6rpx;
+  color: var(--ink);
+}
+
+/* ===== 下方圆形按钮 ===== */
+.home__circles {
+  display: flex;
+  gap: 64rpx;
+}
+
+.btn-circle {
+  width: 236rpx;
+  height: 236rpx;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14rpx;
+  transition: transform 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+}
+.btn-circle--active {
+  transform: scale(0.96);
+  box-shadow: 0 6rpx 20rpx rgba(31, 35, 55, 0.06);
+}
+
+.btn-circle__icon {
+  width: 64rpx;
+  height: 64rpx;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.92;
+}
+.btn-circle__icon--ai {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMUMxQzFFIiBzdHJva2Utd2lkdGg9IjIuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjQgNSBMMjcuNSAxOC41IEw0MSAyMiBMMjcuNSAyNS41IEwyNCAzOSBMMjAuNSAyNS41IEw3IDIyIEwyMC41IDE4LjUgWiIvPjxjaXJjbGUgY3g9IjM3IiBjeT0iMzciIHI9IjMuMiIvPjwvc3ZnPg==");
+}
+.btn-circle__icon--me {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMUMxQzFFIiBzdHJva2Utd2lkdGg9IjIuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48Y2lyY2xlIGN4PSIyNCIgY3k9IjE2IiByPSI4Ii8+PHBhdGggZD0iTTggNDIgUTggMjkgMjQgMjkgUTQwIDI5IDQwIDQyIi8+PC9zdmc+");
+}
+
+.btn-circle__label {
+  font-size: 26rpx;
+  font-weight: 600;
+  letter-spacing: 3rpx;
+  color: var(--ink);
+}

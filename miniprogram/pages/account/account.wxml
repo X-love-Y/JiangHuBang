@@ -1,0 +1,69 @@
+<view class="page-container account-page" wx:if="{{user}}">
+  <!-- 账号信息卡 -->
+  <view class="glass-card fade-up info-card">
+    <view class="info-card__icon">🪪</view>
+    <view class="info-card__body">
+      <view class="info-card__label">当前江湖账号</view>
+      <view class="info-card__id">{{user.userId || '尚未注册'}}</view>
+    </view>
+  </view>
+
+  <!-- 未注册：引导注册 -->
+  <view class="glass-card fade-up stagger-1" wx:if="{{!user.userId}}">
+    <view class="guest-tip">
+      注册账号后可发布委托、接单、聊天、逛商城。<br />你的资产和记录都会保留。
+    </view>
+    <button class="pill-btn pill-btn--primary tip-btn" hover-class="pill-btn--active" bindtap="goRegister">立即注册</button>
+    <button class="pill-btn pill-btn--ghost tip-btn" hover-class="pill-btn--active" bindtap="goLogin">我有账号，去登录</button>
+  </view>
+
+  <!-- 已注册：安全设置 -->
+  <block wx:else>
+    <!-- 修改密码 -->
+    <view class="glass-card fade-up stagger-1" wx:if="{{tab === 'pwd'}}">
+      <view class="section-label">修改密码</view>
+      <view class="field">
+        <input class="glass-input" password placeholder="旧密码" placeholder-class="ph" value="{{oldPassword}}" bindinput="onOldPwdInput" />
+      </view>
+      <view class="field">
+        <input class="glass-input" password placeholder="新密码（6-20 位，含字母和数字）" placeholder-class="ph" value="{{newPassword}}" bindinput="onNewPwdInput" />
+      </view>
+      <view class="field">
+        <input class="glass-input" password placeholder="确认新密码" placeholder-class="ph" value="{{confirmPassword}}" bindinput="onConfirmPwdInput" />
+      </view>
+      <button class="pill-btn pill-btn--primary form-btn {{submitting ? 'pill-btn--disabled' : ''}}" hover-class="pill-btn--active" bindtap="changePassword">确认修改</button>
+    </view>
+
+    <!-- 修改 ID -->
+    <view class="glass-card fade-up stagger-1" wx:if="{{tab === 'id'}}">
+      <view class="section-label">修改账号 ID</view>
+      <view class="field">
+        <input class="glass-input" placeholder="新 ID（4-16 位字母或数字）" placeholder-class="ph" maxlength="16" value="{{newUserId}}" bindinput="onNewIdInput" />
+      </view>
+      <view class="field">
+        <input class="glass-input" password placeholder="输入当前密码验证身份" placeholder-class="ph" value="{{idPassword}}" bindinput="onIdPwdInput" />
+      </view>
+      <view class="field__hint">修改 ID 后 30 天内不可再次修改；历史委托与资产不受影响</view>
+      <button class="pill-btn pill-btn--primary form-btn {{submitting ? 'pill-btn--disabled' : ''}}" hover-class="pill-btn--active" bindtap="changeUserId">确认修改</button>
+    </view>
+
+    <!-- 操作入口 -->
+    <view class="glass-card fade-up stagger-1" wx:if="{{tab === 'info'}}">
+      <view class="menu-item" hover-class="menu-item--active" bindtap="switchTab" data-tab="pwd">
+        <text class="menu-item__icon">🔑</text>
+        <text class="menu-item__label">修改密码</text>
+        <text class="menu-item__arrow">›</text>
+      </view>
+      <view class="menu-item" hover-class="menu-item--active" bindtap="switchTab" data-tab="id">
+        <text class="menu-item__icon">✏️</text>
+        <text class="menu-item__label">修改 ID</text>
+        <text class="menu-item__arrow">›</text>
+      </view>
+      <view class="menu-item" hover-class="menu-item--active" bindtap="goLogin">
+        <text class="menu-item__icon">🔄</text>
+        <text class="menu-item__label">换账号登录（换微信找回账号）</text>
+        <text class="menu-item__arrow">›</text>
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "称号商城",
+  "usingComponents": {
+    "confirm-dialog": "/components/confirm-dialog/confirm-dialog"
+  }
+}

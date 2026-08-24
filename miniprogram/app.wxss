@@ -1,0 +1,66 @@
+/* app.wxss —— 全局设计系统
+ * 玻璃拟态 + Soft UI 风格：柔和浅灰白底、半透明磨砂卡片、超大圆角、柔和阴影
+ */
+@import "styles/variables.wxss";
+@import "styles/mixins.wxss";
+
+page {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, "SF Pro Text", "PingFang SC", "Helvetica Neue",
+    "Microsoft YaHei", sans-serif;
+  font-size: 28rpx;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 页面容器：左右留白 + 上下留白 */
+.page-container {
+  padding: 24rpx var(--page-pad) 60rpx;
+}
+
+/* 区块标题 */
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  margin: 40rpx 8rpx 24rpx;
+}
+
+.section-sub {
+  font-size: 24rpx;
+  color: var(--ink-3);
+  margin: -16rpx 8rpx 24rpx;
+}
+
+/* 通用行 */
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+/* 文字工具类 */
+.ink-2 { color: var(--ink-2); }
+.ink-3 { color: var(--ink-3); }
+.bold { font-weight: 600; }
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ellipsis-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}

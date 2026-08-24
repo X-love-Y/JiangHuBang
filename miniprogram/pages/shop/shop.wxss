@@ -1,0 +1,149 @@
+/* shop —— 称号商城 */
+.shop-page {
+  padding-bottom: 60rpx;
+}
+
+.gold-bar {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 22rpx 32rpx;
+  border-radius: var(--radius-pill);
+  margin-bottom: 24rpx;
+}
+.gold-bar__icon {
+  font-size: 34rpx;
+}
+.gold-bar__num {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: var(--gold-deep);
+}
+.gold-bar__label {
+  flex: 1;
+  font-size: 23rpx;
+  color: var(--ink-2);
+}
+.gold-bar__hint {
+  font-size: 21rpx;
+  color: var(--ink-3);
+}
+
+.tabs {
+  display: flex;
+  padding: 8rpx;
+  border-radius: var(--radius-pill);
+  margin-bottom: 28rpx;
+}
+.tabs__item {
+  flex: 1;
+  text-align: center;
+  padding: 18rpx 0;
+  border-radius: var(--radius-pill);
+  font-size: 28rpx;
+  color: var(--ink-2);
+  transition: all 180ms var(--ease-out);
+}
+.tabs__item--on {
+  background: linear-gradient(135deg, #2A2A2E 0%, #1C1C1E 100%);
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 8rpx 20rpx rgba(28, 28, 30, 0.20);
+}
+.tabs__item--active {
+  transform: scale(0.97);
+}
+
+.goods {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+.goods-card {
+  transition: transform 150ms var(--ease-out);
+}
+.goods-card--locked {
+  opacity: 0.82;
+}
+.goods-card__top {
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+}
+.goods-card__icon-wrap {
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(145deg, rgba(201, 162, 39, 0.14), rgba(255, 255, 255, 0.6));
+  border: 1rpx solid rgba(201, 162, 39, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.goods-card__icon {
+  font-size: 44rpx;
+}
+.goods-card__info {
+  flex: 1;
+  min-width: 0;
+}
+.goods-card__name {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+.goods-card__desc {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  margin-top: 4rpx;
+  line-height: 1.5;
+}
+.goods-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+  flex-shrink: 0;
+}
+.goods-card__price-num {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: var(--gold-deep);
+}
+.goods-card__price-unit {
+  font-size: 22rpx;
+  font-weight: 700;
+  color: var(--gold-deep);
+}
+.goods-card__effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 20rpx;
+}
+.goods-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 22rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid rgba(28, 28, 30, 0.05);
+}
+.goods-card__unlock {
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+.goods-card__unlock--need {
+  color: var(--cinnabar);
+}
+.goods-card__action {
+  display: flex;
+  align-items: center;
+}
+
+.shop-footer {
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--ink-3);
+  padding: 40rpx 0 16rpx;
+  letter-spacing: 2rpx;
+}

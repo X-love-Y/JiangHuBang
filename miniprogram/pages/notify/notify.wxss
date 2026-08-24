@@ -1,0 +1,40 @@
+/* notify —— 站内通知 */
+.notify-page {
+  padding-bottom: 60rpx;
+}
+.notify-card {
+  margin-bottom: 20rpx;
+  position: relative;
+}
+.notify-card--unread {
+  border: 1rpx solid rgba(201, 162, 39, 0.30);
+  background: linear-gradient(135deg, rgba(255, 251, 235, 0.95), rgba(255, 255, 255, 0.88));
+}
+.notify-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+.notify-card__title {
+  font-size: 28rpx;
+  font-weight: 700;
+}
+.notify-card__dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: var(--cinnabar);
+  flex-shrink: 0;
+}
+.notify-card__content {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: var(--ink-2);
+  line-height: 1.7;
+}
+.notify-card__time {
+  margin-top: 12rpx;
+  font-size: 21rpx;
+  color: var(--ink-3);
+}

@@ -1,0 +1,22 @@
+<view class="page-container chatlist-page">
+  <view class="glass-card fade-up conv-card {{index < 6 ? 'stagger-' + (index + 1) : ''}}"
+    wx:for="{{list}}" wx:key="conversationId"
+    hover-class="conv-card--active"
+    data-id="{{item.conversationId}}" data-name="{{item.otherName}}" bindtap="goChat">
+    <view class="conv-card__avatar-wrap">
+      <image wx:if="{{item.otherAvatar}}" class="conv-card__avatar" src="{{item.otherAvatar}}" mode="aspectFill" />
+      <view wx:else class="conv-card__avatar conv-card__avatar--placeholder">{{item.otherName[0]}}</view>
+    </view>
+    <view class="conv-card__body">
+      <view class="conv-card__top">
+        <text class="conv-card__name ellipsis">{{item.otherName}}</text>
+        <text class="conv-card__time">{{item.timeText}}</text>
+      </view>
+      <view class="conv-card__bottom">
+        <text class="conv-card__preview ellipsis">{{item.lastPreview || '开始对话吧'}}</text>
+        <view class="conv-card__badge" wx:if="{{item.unread > 0}}">{{item.unread > 99 ? '99+' : item.unread}}</view>
+      </view>
+    </view>
+  </view>
+  <empty-state wx:if="{{!list.length && !loading}}" icon="💬" text="暂无会话，在委托详情中联系对方" />
+</view>

@@ -1,0 +1,16 @@
+.star-bar {
+  display: inline-flex;
+  align-items: center;
+}
+.star {
+  color: rgba(28, 28, 30, 0.12);
+  font-size: inherit;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.star--on {
+  color: var(--star);
+  text-shadow: 0 2rpx 8rpx rgba(232, 181, 77, 0.4);
+}

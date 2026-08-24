@@ -1,0 +1,260 @@
+/* list —— 寻找委托大厅 */
+.list-page {
+  padding-bottom: 80rpx;
+}
+
+/* 平台公告 */
+.announce-banner {
+  padding: 20rpx 28rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(135deg, rgba(255, 251, 235, 0.95), rgba(255, 255, 255, 0.88));
+  border: 1rpx solid rgba(201, 162, 39, 0.28);
+  font-size: 24rpx;
+  color: var(--gold-deep);
+  margin-bottom: 20rpx;
+  line-height: 1.6;
+}
+
+/* 搜索行 */
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+.search-box {
+  flex: 1;
+  padding: 18rpx 28rpx;
+  border-radius: var(--radius-pill);
+}
+.search-btn {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  box-sizing: border-box;
+  transition: transform 150ms var(--ease-out);
+}
+.search-btn--active {
+  transform: scale(0.92);
+}
+
+/* 广播位 */
+.broadcast {
+  white-space: nowrap;
+  width: 100%;
+  margin-bottom: 24rpx;
+}
+.broadcast__card {
+  display: inline-flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 24rpx 28rpx;
+  margin-right: 20rpx;
+  border-radius: 32rpx;
+  background: linear-gradient(135deg, rgba(255, 251, 235, 0.92), rgba(255, 255, 255, 0.85));
+  border: 1rpx solid rgba(201, 162, 39, 0.28);
+  box-shadow: 0 8rpx 28rpx rgba(201, 162, 39, 0.14);
+  box-sizing: border-box;
+  transition: transform 150ms var(--ease-out);
+}
+.broadcast__card--active {
+  transform: scale(0.97);
+}
+.broadcast__icon {
+  font-size: 40rpx;
+}
+.broadcast__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.broadcast__title {
+  font-size: 26rpx;
+  font-weight: 600;
+  max-width: 320rpx;
+}
+.broadcast__meta {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+.broadcast__amount {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: var(--cinnabar);
+}
+.broadcast__region {
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+
+/* 筛选 */
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 28rpx;
+}
+.status-row {
+  display: flex;
+  gap: 16rpx;
+}
+.status-chip {
+  padding: 14rpx 36rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+.filter-scroll {
+  white-space: nowrap;
+  width: 100%;
+}
+.filter-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 4rpx 2rpx;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 12rpx 26rpx;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1rpx solid rgba(255, 255, 255, 0.9);
+  font-size: 24rpx;
+  color: var(--ink-2);
+  box-shadow: 0 4rpx 14rpx rgba(31, 35, 55, 0.05);
+  transition: all 150ms var(--ease-out);
+  white-space: nowrap;
+}
+.chip--sm {
+  padding: 10rpx 22rpx;
+  font-size: 22rpx;
+}
+.chip--on {
+  background: linear-gradient(135deg, #2A2A2E 0%, #1C1C1E 100%);
+  color: #FFFFFF;
+  border-color: transparent;
+  box-shadow: 0 8rpx 20rpx rgba(28, 28, 30, 0.20);
+}
+.chip--active {
+  transform: scale(0.95);
+}
+
+/* 委托卡片 */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+.commission-card {
+  transition: transform 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+}
+.commission-card--active {
+  transform: scale(0.98);
+  box-shadow: 0 6rpx 18rpx rgba(31, 35, 55, 0.06);
+}
+/* 已结束委托（定向搜索中出现）：弱化展示 */
+.commission-card--closed {
+  opacity: 0.62;
+}
+.commission-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+.commission-card__title {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 1.45;
+}
+.commission-card__amount {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+  flex-shrink: 0;
+}
+.commission-card__num {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: var(--cinnabar);
+}
+.commission-card__unit {
+  font-size: 22rpx;
+  font-weight: 700;
+  padding: 2rpx 10rpx;
+  border-radius: var(--radius-pill);
+}
+.unit--gold {
+  background: var(--gold-soft);
+  color: var(--gold-deep);
+}
+.unit--silver {
+  background: var(--silver-soft);
+  color: #5F5F66;
+}
+
+.commission-card__mid {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-top: 20rpx;
+  flex-wrap: wrap;
+}
+.commission-card__region {
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+
+.commission-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(28, 28, 30, 0.05);
+}
+.commission-card__publisher {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 24rpx;
+  color: var(--ink-2);
+  max-width: 60%;
+}
+.commission-card__avatar {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.commission-card__avatar--placeholder {
+  background: linear-gradient(135deg, #D8DBE4, #C2C7D4);
+  color: #FFF;
+  font-size: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.commission-card__time {
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+
+/* 底部 */
+.list-footer {
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--ink-3);
+  padding: 40rpx 0 20rpx;
+  letter-spacing: 2rpx;
+}
+.empty-cta {
+  margin-top: 32rpx;
+}

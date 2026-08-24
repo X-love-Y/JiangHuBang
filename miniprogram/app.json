@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/splash/splash",
+    "pages/home/home",
+    "pages/publish/publish",
+    "pages/list/list",
+    "pages/detail/detail",
+    "pages/my-orders/my-orders",
+    "pages/ai/ai",
+    "pages/mine/mine",
+    "pages/wallet/wallet",
+    "pages/shop/shop",
+    "pages/titles/titles",
+    "pages/profile/profile",
+    "pages/register/register",
+    "pages/account/account",
+    "pages/user-home/user-home",
+    "pages/review/review",
+    "pages/drafts/drafts",
+    "pages/notify/notify",
+    "pages/chat-list/chat-list",
+    "pages/chat/chat",
+    "pages/admin/admin",
+    "pages/recharge/recharge"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#F2F3F7",
+    "navigationBarTitleText": "江湖榜",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F2F3F7",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "cloud": true,
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}
