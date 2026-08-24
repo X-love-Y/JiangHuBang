@@ -1,5 +1,6 @@
 <view class="page-container notify-page">
   <view class="glass-card fade-up notify-card {{!item.read ? 'notify-card--unread' : ''}}"
+    hover-class="notify-card--active"
     wx:for="{{list}}" wx:key="_id" data-id="{{item._id}}" data-related="{{item.relatedId}}" bindtap="tapNotify">
     <view class="notify-card__top">
       <text class="notify-card__title">{{item.title}}</text>

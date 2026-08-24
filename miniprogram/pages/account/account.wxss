@@ -65,13 +65,14 @@
   padding: 30rpx 8rpx;
   border-bottom: 1rpx solid rgba(28, 28, 30, 0.05);
   border-radius: 20rpx;
-  transition: background 150ms;
+  transition: background 150ms, transform 220ms var(--ease-smooth);
 }
 .menu-item:last-child {
   border-bottom: none;
 }
 .menu-item--active {
   background: rgba(28, 28, 30, 0.03);
+  transform: scale(0.96);
 }
 .menu-item__icon {
   font-size: 36rpx;

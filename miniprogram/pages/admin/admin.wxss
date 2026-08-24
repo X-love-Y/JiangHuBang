@@ -22,6 +22,10 @@
 .tx-card--active {
   transform: scale(0.99);
 }
+/* 会话卡片按压反馈（原 hover-class 未定义样式，现补齐） */
+.chat-card--active {
+  transform: scale(0.98);
+}
 .tx-user {
   font-weight: 700;
   color: var(--ink-2);

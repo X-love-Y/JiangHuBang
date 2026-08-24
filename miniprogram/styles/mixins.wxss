@@ -35,8 +35,8 @@
   font-size: 30rpx;
   font-weight: 600;
   letter-spacing: 2rpx;
-  transition: transform 150ms var(--ease-out), box-shadow 150ms var(--ease-out),
-    opacity 150ms var(--ease-out);
+  transition: transform 220ms var(--ease-smooth), box-shadow 220ms var(--ease-smooth),
+    opacity 220ms var(--ease-smooth);
   border: none;
   line-height: 1;
   padding: 0 48rpx;
@@ -87,7 +87,7 @@
 
 /* 按压反馈 */
 .pill-btn--active {
-  transform: scale(0.97);
+  transform: scale(0.96);
   box-shadow: 0 4rpx 12rpx rgba(31, 35, 55, 0.06);
   opacity: 0.92;
 }
@@ -96,6 +96,30 @@
   opacity: 0.45;
   pointer-events: none;
 }
+
+/* ===== 通用按压缩放（所有可点击元素统一丝滑反馈） =====
+ * 元素级选择器优先级最低：已有精细过渡的控件（如 .pill-btn、.chip 等）不受影响；
+ * 其余可点击元素在按压/松手时自动获得平滑缩放过渡。 */
+button,
+navigator,
+view,
+text,
+image {
+  transition: transform 220ms var(--ease-smooth);
+}
+
+/* 原生 button 未显式指定 hover-class 时使用默认 button-hover：
+ * 覆盖为纯缩放，避免出现系统默认灰色底 */
+.button-hover {
+  transform: scale(0.96);
+  background-color: transparent;
+}
+
+/* 通用按压缩放类：新写的可点击元素可直接 hover-class="press-scale" */
+.press-scale {
+  transform: scale(0.96);
+}
+
 
 /* ===== 徽章 ===== */
 .badge {
@@ -156,7 +180,9 @@
 
 /* ===== 卡片入场动效 ===== */
 .fade-up {
-  animation: fadeUp 300ms var(--ease-out) both;
+  /* 用 backwards 而非 both：入场动画结束后不再占用 transform，
+     否则会一直覆盖 hover-class 的按压缩放，导致点击无缩放反馈 */
+  animation: fadeUp 300ms var(--ease-out) backwards;
 }
 @keyframes fadeUp {
   from {

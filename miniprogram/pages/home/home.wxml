@@ -5,13 +5,13 @@
   <view class="blob blob--c"></view>
 
   <view class="home__body">
-    <!-- 上方：两个竖排矩形按钮 -->
+    <!-- 上方：两个全宽横向矩形，上下堆叠 -->
     <view class="home__rects">
-      <view class="btn-rect glass fade-up stagger-1" hover-class="btn-rect--active" hover-stay-time="120" bindtap="goPublish">
+      <view class="btn-rect glass fade-up stagger-1" hover-class="btn-rect--active" hover-start-time="0" hover-stay-time="120" bindtap="goPublish">
         <view class="btn-rect__icon btn-rect__icon--publish"></view>
         <view class="btn-rect__label">发布委托</view>
       </view>
-      <view class="btn-rect glass fade-up stagger-3" hover-class="btn-rect--active" hover-stay-time="120" bindtap="goList">
+      <view class="btn-rect glass fade-up stagger-3" hover-class="btn-rect--active" hover-start-time="0" hover-stay-time="120" bindtap="goList">
         <view class="btn-rect__icon btn-rect__icon--find"></view>
         <view class="btn-rect__label">寻找委托</view>
       </view>
@@ -19,11 +19,11 @@
 
     <!-- 下方：两个圆形按钮 -->
     <view class="home__circles">
-      <view class="btn-circle glass fade-up stagger-5" hover-class="btn-circle--active" hover-stay-time="120" bindtap="goAI">
+      <view class="btn-circle glass fade-up stagger-5" hover-class="btn-circle--active" hover-start-time="0" hover-stay-time="120" bindtap="goAI">
         <view class="btn-circle__icon btn-circle__icon--ai"></view>
         <view class="btn-circle__label">AI 助手</view>
       </view>
-      <view class="btn-circle glass fade-up stagger-6" hover-class="btn-circle--active" hover-stay-time="120" bindtap="goMine">
+      <view class="btn-circle glass fade-up stagger-6" hover-class="btn-circle--active" hover-start-time="0" hover-stay-time="120" bindtap="goMine">
         <view class="btn-circle__icon btn-circle__icon--me"></view>
         <view class="btn-circle__label">我的</view>
       </view>

@@ -10,6 +10,9 @@
   border: 1rpx solid rgba(201, 162, 39, 0.30);
   background: linear-gradient(135deg, rgba(255, 251, 235, 0.95), rgba(255, 255, 255, 0.88));
 }
+.notify-card--active {
+  transform: scale(0.98);
+}
 .notify-card__top {
   display: flex;
   align-items: center;
