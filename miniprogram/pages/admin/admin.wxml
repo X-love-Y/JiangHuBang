@@ -10,9 +10,12 @@
     </view>
   </scroll-view>
 
+  <!-- 结果计数（便于核对查询结果） -->
+  <view class="result-count fade-up" wx:if="{{needSearch}}">共 {{list.length}} 条结果</view>
+
   <!-- 搜索行（委托/用户/草稿/流水/聊天 共用） -->
   <view class="search-row fade-up stagger-1" wx:if="{{needSearch}}">
-    <input class="glass-input search-input" placeholder="{{searchPlaceholder}}" placeholder-class="ph"
+    <input class="glass-input search-input" placeholder="{{searchPlaceholder}}（留空查全部）" placeholder-class="ph"
       value="{{keyword}}" bindinput="onKeyword" confirm-type="search" bindconfirm="doSearch" />
     <view class="pill-btn pill-btn--primary pill-btn--sm" hover-class="pill-btn--active" bindtap="doSearch">查询</view>
   </view>
@@ -108,7 +111,7 @@
         <view class="tx-detail__row">变动后余额：{{item.balanceAfter == null ? '—' : item.balanceAfter}}</view>
         <view class="tx-detail__row">关联：{{item.relatedId || '—'}}</view>
         <view class="tx-detail__row">时间：{{item.timeText}}</view>
-        <view class="tx-detail__row">用户：{{item.userId}}</view>
+        <view class="tx-detail__row">用户：{{item.userName}}{{item.userNickname ? '（' + item.userNickname + '）' : ''}}</view>
       </view>
     </view>
   </block>
@@ -124,7 +127,11 @@
       </view>
     </view>
     <view class="glass-card fade-up admin-card" wx:for="{{announces}}" wx:key="_id">
-      <view class="admin-card__preview">{{item.content}}</view>
+      <view class="admin-card__top">
+        <text class="admin-card__preview">{{item.content}}</text>
+        <text class="badge {{item.expired ? 'badge--ink' : 'badge--success'}}">{{item.expired ? '已停止' : '展示中'}}</text>
+      </view>
+      <view class="admin-card__meta">发布时间：{{item.createdText}} · 停止时间：{{item.expireText}}</view>
     </view>
   </block>
 

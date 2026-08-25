@@ -45,6 +45,7 @@
   font-size: 22rpx;
   color: var(--ink-2);
   word-break: break-all;
+  white-space: pre-wrap; /* JSON 多行详情完整展示 */
 }
 .tab-row {
   display: inline-flex;
@@ -327,4 +328,10 @@
   color: var(--ink);
   min-width: 60rpx;
   text-align: right;
+}
+
+.result-count {
+  font-size: 21rpx;
+  color: var(--ink-3);
+  margin: -6rpx 0 12rpx 8rpx;
 }

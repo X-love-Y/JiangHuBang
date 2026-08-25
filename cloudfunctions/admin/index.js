@@ -160,19 +160,27 @@ async function commissionList(event) {
   const { keyword, page = 1, pageSize = 10 } = event || {};
   const size = Math.min(Number(pageSize) || 10, 20);
   const skip = (Math.max(1, Number(page) || 1) - 1) * size;
-  let where = {};
-  if (keyword) {
-    where = _.or([
-      { commissionNo: String(keyword) },
-      { title: db.RegExp({ regexp: String(keyword).slice(0, 20), options: 'i' }) }
+  const kw = String(keyword || '').trim().slice(0, 20);
+
+  let all = [];
+  if (!kw) {
+    // 留空：查询全部
+    const [listRes, totalRes] = await Promise.all([
+      db.collection('commissions').orderBy('createdAt', 'desc').skip(skip).limit(size).get(),
+      db.collection('commissions').count()
     ]);
+    return ok({ list: listRes.data, total: totalRes.total, hasMore: skip + listRes.data.length < totalRes.total });
   }
-  const [listRes, totalRes] = await Promise.all([
-    db.collection('commissions').where(where)
-      .orderBy('createdAt', 'desc').skip(skip).limit(size).get(),
-    db.collection('commissions').where(where).count()
+  // 编号精确 + 标题模糊：两次查询合并去重（避免 _.or 兼容问题）
+  const [byNo, byTitle] = await Promise.all([
+    db.collection('commissions').where({ commissionNo: kw }).limit(20).get(),
+    db.collection('commissions').where({ title: db.RegExp({ regexp: kw, options: 'i' }) })
+      .orderBy('createdAt', 'desc').limit(50).get()
   ]);
-  return ok({ list: listRes.data, total: totalRes.total, hasMore: skip + listRes.data.length < totalRes.total });
+  const seen = {};
+  byNo.data.concat(byTitle.data).forEach((c) => { seen[c._id] = c; });
+  all = Object.values(seen).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return ok({ list: all.slice(skip, skip + size), total: all.length, hasMore: skip + size < all.length });
 }
 
 // ===== 删除委托（三选一资金处理，必须显式选择） =====
@@ -350,22 +358,8 @@ async function changeAmount(OPENID, event) {
 }
 
 // ===== 用户搜索 =====
-async function userSearch(event) {
-  const { keyword, page = 1, pageSize = 10 } = event || {};
-  if (!keyword) return fail('INVALID_PARAM', '请输入用户 ID 或昵称');
-  const kw = String(keyword).slice(0, 20);
-  const size = Math.min(Number(pageSize) || 10, 20);
-  const skip = (Math.max(1, Number(page) || 1) - 1) * size;
-  const where = _.or([
-    { userId: kw },
-    { _id: kw },
-    { nickname: db.RegExp({ regexp: kw, options: 'i' }) }
-  ]);
-  const [listRes, totalRes] = await Promise.all([
-    db.collection('users').where(where).skip(skip).limit(size).get(),
-    db.collection('users').where(where).count()
-  ]);
-  const list = listRes.data.map((u) => ({
+function pickUser(u) {
+  return {
     _id: u._id,
     userId: u.userId || '',
     nickname: u.nickname || '江湖路人',
@@ -379,8 +373,32 @@ async function userSearch(event) {
     rep: u.rep == null ? 500 : u.rep,
     fame: u.fame || 0,
     skill: u.skill == null ? 300 : u.skill
-  }));
-  return ok({ list, total: totalRes.total });
+  };
+}
+
+async function userSearch(event) {
+  const { keyword, page = 1, pageSize = 10 } = event || {};
+  const kw = String(keyword || '').trim().slice(0, 20);
+  const size = Math.min(Number(pageSize) || 10, 20);
+  const skip = (Math.max(1, Number(page) || 1) - 1) * size;
+
+  let all = [];
+  if (!kw) {
+    const [listRes, totalRes] = await Promise.all([
+      db.collection('users').orderBy('silver', 'desc').skip(skip).limit(size).get(),
+      db.collection('users').count()
+    ]);
+    return ok({ list: listRes.data.map(pickUser), total: totalRes.total });
+  }
+  const [byId, byOpenid, byNick] = await Promise.all([
+    db.collection('users').where({ userId: kw }).limit(10).get(),
+    db.collection('users').where({ _id: kw }).limit(1).get(),
+    db.collection('users').where({ nickname: db.RegExp({ regexp: kw, options: 'i' }) }).limit(30).get()
+  ]);
+  const seen = {};
+  byId.data.concat(byOpenid.data).concat(byNick.data).forEach((u) => { seen[u._id] = u; });
+  all = Object.values(seen);
+  return ok({ list: all.slice(skip, skip + size).map(pickUser), total: all.length });
 }
 
 // ===== 禁发/禁言/封禁（可设期限） =====
@@ -425,18 +443,28 @@ async function userUnban(OPENID, event) {
 // ===== 查看任意用户草稿 =====
 async function listDrafts(event) {
   const { userId, page = 1, pageSize = 10 } = event || {};
-  if (!userId) return fail('INVALID_PARAM', '请输入账号 ID 或 openid');
-  const kw = String(userId);
-  // 支持 账号ID / openid / 昵称 → 解析出 openid 列表
-  const uRes = await db.collection('users').where(_.or([
-    { userId: kw },
-    { _id: kw },
-    { nickname: db.RegExp({ regexp: kw.slice(0, 20), options: 'i' }) }
-  ])).limit(20).get();
-  if (!uRes.data.length) return fail('USER_NOT_FOUND', '未找到该用户（可输账号 ID、昵称或 openid）');
-  const ownerIds = uRes.data.map((u) => u._id);
+  const kw = String(userId || '').trim().slice(0, 20);
   const size = Math.min(Number(pageSize) || 10, 20);
   const skip = (Math.max(1, Number(page) || 1) - 1) * size;
+  // 留空：查询全部草稿
+  if (!kw) {
+    const [listRes, totalRes] = await Promise.all([
+      db.collection('drafts').orderBy('createdAt', 'desc').skip(skip).limit(size).get(),
+      db.collection('drafts').count()
+    ]);
+    return ok({ list: listRes.data, total: totalRes.total });
+  }
+  // 支持 账号ID / openid / 昵称 → 解析出 openid 列表
+  const [uById, uByOpenid, uByNick] = await Promise.all([
+    db.collection('users').where({ userId: kw }).limit(10).get(),
+    db.collection('users').where({ _id: kw }).limit(1).get(),
+    db.collection('users').where({ nickname: db.RegExp({ regexp: kw.slice(0, 20), options: 'i' }) }).limit(20).get()
+  ]);
+  const seen = {};
+  uById.data.concat(uByOpenid.data).concat(uByNick.data).forEach((u) => { seen[u._id] = u; });
+  const matched = Object.values(seen);
+  if (!matched.length) return fail('USER_NOT_FOUND', '未找到该用户（可输账号 ID、昵称或 openid）');
+  const ownerIds = matched.map((u) => u._id);
   const [listRes, totalRes] = await Promise.all([
     db.collection('drafts').where({ ownerId: _.in(ownerIds) })
       .orderBy('createdAt', 'desc').skip(skip).limit(size).get(),
@@ -448,14 +476,21 @@ async function listDrafts(event) {
 // ===== 查看所有会话/聊天 =====
 async function listChats(event) {
   const { keyword } = event || {};
-  let q = db.collection('conversations');
-  if (keyword) {
-    q = q.where(_.or([
-      { commissionTitle: db.RegExp({ regexp: String(keyword).slice(0, 20), options: 'i' }) },
-      { commissionId: String(keyword) }
-    ]));
+  const kw = String(keyword || '').trim().slice(0, 20);
+  let convs = [];
+  if (!kw) {
+    const res = await db.collection('conversations').orderBy('lastAt', 'desc').limit(50).get();
+    convs = res.data;
+  } else {
+    const [byId, byTitle] = await Promise.all([
+      db.collection('conversations').where({ commissionId: kw }).limit(10).get(),
+      db.collection('conversations').where({ commissionTitle: db.RegExp({ regexp: kw, options: 'i' }) }).limit(50).get()
+    ]);
+    const seen = {};
+    byId.data.concat(byTitle.data).forEach((c) => { seen[c._id] = c; });
+    convs = Object.values(seen).sort((a, b) => new Date(b.lastAt).getTime() - new Date(a.lastAt).getTime());
   }
-  const res = await q.orderBy('lastAt', 'desc').limit(50).get();
+  const res = { data: convs };
   return ok({ list: res.data.map((c) => ({
     conversationId: c._id,
     commissionId: c.commissionId,
@@ -547,10 +582,14 @@ async function announcementCreate(OPENID, event) {
 }
 
 async function announcementList() {
+  // 历史公告：最近 30 条（含已过期），附状态标记
   const res = await db.collection('announcements')
-    .where({ expireAt: _.gt(new Date()) })
-    .orderBy('createdAt', 'desc').limit(5).get();
-  return ok({ list: res.data });
+    .orderBy('createdAt', 'desc').limit(30).get();
+  const now = Date.now();
+  const list = res.data.map((a) => Object.assign({}, a, {
+    expired: !a.expireAt || new Date(a.expireAt).getTime() <= now
+  }));
+  return ok({ list });
 }
 
 // ===== 操作日志 =====

@@ -82,9 +82,6 @@ Page({
     const t = this.data.tab;
     if (!this.data.needSearch) return;
     const kw = this.data.keyword.trim();
-    if (t !== 'chat' && t !== 'tx' && !kw) {
-      return wx.showToast({ title: '请输入查询关键词', icon: 'none' });
-    }
     this.setData({ loading: true });
     const actionMap = {
       commission: ['commissionList', {}],
@@ -98,7 +95,7 @@ Page({
       .then((data) => {
         const list = (data.list || []).map((x) => Object.assign({}, x, {
           timeText: formatDateTime(x.createdAt || x.lastAt),
-          detailText: x.detail ? JSON.stringify(x.detail) : ''
+          detailText: x.detail ? JSON.stringify(x.detail, null, 1) : ''
         }));
         this.setData({ list });
       })
@@ -207,7 +204,14 @@ Page({
   // ===== 公告 =====
   fetchAnnounces() {
     call('admin', { action: 'announcementList' })
-      .then((d) => this.setData({ announces: d.list || [] }))
+      .then((d) => {
+        this.setData({
+          announces: (d.list || []).map((a) => Object.assign({}, a, {
+            createdText: formatDateTime(a.createdAt),
+            expireText: formatDateTime(a.expireAt)
+          }))
+        });
+      })
       .catch(() => {});
   },
   doAnnounce(e) {
@@ -229,7 +233,10 @@ Page({
     call('admin', { action: 'logList' })
       .then((d) => {
         this.setData({
-          list: (d.list || []).map((x) => Object.assign({}, x, { timeText: formatDateTime(x.createdAt) }))
+          list: (d.list || []).map((x) => Object.assign({}, x, {
+            timeText: formatDateTime(x.createdAt),
+            detailText: x.detail ? JSON.stringify(x.detail, null, 1) : ''
+          }))
         });
       })
       .catch(() => {})
