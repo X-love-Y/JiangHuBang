@@ -42,36 +42,37 @@ page {
   justify-content: center;
   gap: 72rpx;
   box-sizing: border-box;
-  padding: 40rpx 0;
+  padding: 24rpx 40rpx;
 }
 
-/* ===== 上方竖排矩形按钮 ===== */
+/* ===== 上方：两个全宽横向矩形（竖排堆叠） ===== */
 .home__rects {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32rpx;
+  gap: 40rpx;
+  width: 100%;
 }
 
 .btn-rect {
-  width: 320rpx;
-  height: 372rpx;
-  border-radius: 56rpx;
+  width: 100%;
+  height: 340rpx;
+  border-radius: 48rpx;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 28rpx;
-  transition: transform 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+  transition: transform 220ms var(--ease-smooth), box-shadow 220ms var(--ease-smooth);
 }
 .btn-rect--active {
-  transform: scale(0.97);
+  transform: scale(0.94);
   box-shadow: 0 6rpx 20rpx rgba(31, 35, 55, 0.06);
 }
 
 .btn-rect__icon {
-  width: 96rpx;
-  height: 96rpx;
+  width: 84rpx;
+  height: 84rpx;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -85,7 +86,7 @@ page {
 }
 
 .btn-rect__label {
-  font-size: 30rpx;
+  font-size: 38rpx;
   font-weight: 600;
   letter-spacing: 6rpx;
   color: var(--ink);
@@ -94,22 +95,24 @@ page {
 /* ===== 下方圆形按钮 ===== */
 .home__circles {
   display: flex;
-  gap: 64rpx;
+  justify-content: center;
+  gap: 96rpx;
+  width: 100%;
 }
 
 .btn-circle {
-  width: 236rpx;
-  height: 236rpx;
+  width: 248rpx;
+  height: 248rpx;
   border-radius: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 14rpx;
-  transition: transform 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+  transition: transform 220ms var(--ease-smooth), box-shadow 220ms var(--ease-smooth);
 }
 .btn-circle--active {
-  transform: scale(0.96);
+  transform: scale(0.93);
   box-shadow: 0 6rpx 20rpx rgba(31, 35, 55, 0.06);
 }
 

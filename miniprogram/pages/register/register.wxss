@@ -72,7 +72,9 @@
   color: var(--ink-3);
   padding: 16rpx;
   letter-spacing: 2rpx;
+  transition: transform 220ms var(--ease-smooth), opacity 220ms var(--ease-smooth);
 }
 .guest-link--active {
+  transform: scale(0.96);
   opacity: 0.7;
 }
