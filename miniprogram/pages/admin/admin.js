@@ -56,25 +56,14 @@ Page({
 
   onKeyword(e) { this.setData({ keyword: e.detail.value }); },
 
-  // 聊天：点开会话查看完整消息
+  // 聊天：点击会话 → 进入管理员只读聊天窗（上帝视角看全部消息）
   openChat(e) {
     const id = e.currentTarget.dataset.id;
-    if (this.data.openChatId === id) {
-      this.setData({ openChatId: '', openMessages: [], openChatTitle: '' });
-      return;
-    }
-    call('admin', { action: 'chatMessages', conversationId: id })
-      .then((d) => {
-        const list = (d.messages || []).map((m) => Object.assign({}, m, {
-          timeText: formatDateTime(m.createdAt)
-        }));
-        this.setData({
-          openChatId: id,
-          openMessages: list,
-          openChatTitle: (d.conversation && d.conversation.commissionTitle) || ''
-        });
-      })
-      .catch(() => {});
+    const item = this.data.list.find((x) => x.conversationId === id);
+    const title = item ? item.commissionTitle : '会话';
+    wx.navigateTo({
+      url: `/pages/chat/chat?conversationId=${id}&admin=1&otherName=${encodeURIComponent(title)}`
+    });
   },
   onAnnounceInput(e) { this.setData({ announceText: e.detail.value }); },
 
@@ -98,6 +87,9 @@ Page({
           detailText: x.detail ? JSON.stringify(x.detail, null, 1) : ''
         }));
         this.setData({ list });
+        if (t === 'chat' && data.rawSample) {
+          console.log('[admin] 会话诊断:', JSON.stringify(data.rawSample, null, 1));
+        }
       })
       .catch(() => {})
       .finally(() => this.setData({ loading: false }));

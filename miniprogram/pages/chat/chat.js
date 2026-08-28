@@ -15,6 +15,7 @@ Page({
   data: {
     conversationId: '',
     otherName: '',
+    adminMode: false,
     messages: [],
     inputText: '',
     me: null,
@@ -34,9 +35,10 @@ Page({
   onLoad(options) {
     this.setData({
       conversationId: options.conversationId || '',
-      otherName: decodeURIComponent(options.otherName || '对方')
+      otherName: decodeURIComponent(options.otherName || '对方'),
+      adminMode: options.admin === '1'
     });
-    wx.setNavigationBarTitle({ title: this.data.otherName });
+    wx.setNavigationBarTitle({ title: this.data.adminMode ? '管理员视角 · 会话' : this.data.otherName });
     this.initRecorder();
     this.bindAudioEvents();
   },
@@ -57,7 +59,7 @@ Page({
 
   startPolling() {
     this.stopPolling();
-    this._poll = setInterval(() => this.fetchMessages(), 5000);
+    this._poll = setInterval(() => this.fetchMessages(), this.data.adminMode ? 8000 : 5000);
   },
   stopPolling() {
     if (this._poll) { clearInterval(this._poll); this._poll = null; }
@@ -117,6 +119,8 @@ Page({
 
   // ===== 消息加载 =====
   fetchMessages(forceScroll = false) {
+    // 管理员只读模式：通过 admin 接口拉取任意会话
+    if (this.data.adminMode) return this.fetchAdminMessages();
     return call('chat', { action: 'getMessages', conversationId: this.data.conversationId })
       .then(async (data) => {
         const msgs = data.messages || [];
@@ -169,6 +173,25 @@ Page({
         }
         this.setData(patch);
         call('chat', { action: 'markRead', conversationId: this.data.conversationId }).catch(() => {});
+      })
+      .catch(() => {});
+  },
+
+  // 管理员只读模式：拉取会话消息（含发送人昵称）
+  fetchAdminMessages() {
+    return call('admin', { action: 'chatMessages', conversationId: this.data.conversationId })
+      .then(async (data) => {
+        const msgs = data.messages || [];
+        const ids = msgs.filter((m) => ['image', 'voice', 'video'].includes(m.type) && m.fileId).map((m) => m.fileId);
+        const urlMap = await resolveCloudUrls(ids);
+        const messages = msgs.map((m) => Object.assign({}, m, {
+          mine: false,
+          name: m.senderName || '用户',
+          avatarUrl: '',
+          mediaUrl: urlMap[m.fileId] || '',
+          timeText: formatDateTime(m.createdAt)
+        }));
+        this.setData({ messages });
       })
       .catch(() => {});
   },

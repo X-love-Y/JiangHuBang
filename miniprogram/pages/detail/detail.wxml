@@ -254,8 +254,8 @@
       <button wx:if="{{c.status === 'accepted' && (isAcceptor || myAcceptorIdx >= 0) && !proofEditorOpen}}"
         class="pill-btn pill-btn--primary" hover-class="pill-btn--active" bindtap="openProofEditor">提交完成凭证</button>
 
-      <!-- 客服会话（双方关系成立后可见） -->
-      <button wx:if="{{(isAcceptor || myAcceptorIdx >= 0 || isPublisher) && (c.status === 'accepted' || c.status === 'submitted' || c.status === 'settled')}}"
+      <!-- 客服会话：接单前即可咨询（待接单阶段人人可发起）；进行中/结算后限参与方 -->
+      <button wx:if="{{c.status === 'pending' || (c.mode === 'public' && (isPublisher || myRequestStatus)) || (c.mode !== 'public' && (isAcceptor || isPublisher) && (c.status === 'accepted' || c.status === 'submitted' || c.status === 'settled'))}}"
         class="pill-btn pill-btn--ghost" hover-class="pill-btn--active" bindtap="goChat">💬 客服会话</button>
 
       <!-- 私人模式：放弃 -->

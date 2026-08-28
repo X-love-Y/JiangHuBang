@@ -35,6 +35,10 @@ function isParty(c, OPENID) {
   if (c.publisherId === OPENID) return true;
   if (c.acceptorId === OPENID) return true;
   if ((c.acceptors || []).some((a) => a.userId === OPENID)) return true;
+  // 公共模式：已申请（待审核/已选定）的申请人也算参与方，接单前即可沟通
+  if ((c.requests || []).some((r) => r.userId === OPENID && ['pending', 'approved'].includes(r.status))) return true;
+  // 待接单阶段：任何注册用户都可以在接单前咨询发布者
+  if (c.status === 'pending') return true;
   return false;
 }
 
@@ -56,8 +60,15 @@ async function createByCommission(OPENID, event) {
   const members = [c.publisherId];
   if (c.mode === 'public') {
     (c.acceptors || []).forEach((a) => members.push(a.userId));
+    // 接单前沟通：把当前申请人一并纳入会话
+    (c.requests || []).forEach((r) => {
+      if (['pending', 'approved'].includes(r.status)) members.push(r.userId);
+    });
   } else if (c.acceptorId) {
     members.push(c.acceptorId);
+  } else if (c.status === 'pending') {
+    // 私人模式待接单：把发起咨询的访客纳入会话
+    members.push(OPENID);
   }
   const uniq = [...new Set(members)];
   // 成员昵称快照

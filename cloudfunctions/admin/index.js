@@ -491,6 +491,15 @@ async function listChats(event) {
     convs = Object.values(seen).sort((a, b) => new Date(b.lastAt).getTime() - new Date(a.lastAt).getTime());
   }
   const res = { data: convs };
+  // 诊断样本：若前端显示字段为空，可据此判断文档结构
+  const rawSample = convs.slice(0, 3).map((c) => ({
+    id: String(c._id).slice(-6),
+    keys: Object.keys(c).slice(0, 20),
+    hasTitle: !!c.commissionTitle,
+    memberCount: (c.members || []).length,
+    hasSnapshots: !!(c.memberSnapshots && Object.keys(c.memberSnapshots).length),
+    hasPreview: !!c.lastPreview
+  }));
   return ok({ list: res.data.map((c) => ({
     conversationId: c._id,
     commissionId: c.commissionId,
@@ -498,7 +507,7 @@ async function listChats(event) {
     memberNames: (c.members || []).map((m) => ((c.memberSnapshots || {})[m] || {}).nickname || m).join('、'),
     lastPreview: c.lastPreview || '',
     lastAt: c.lastAt
-  })) });
+  })), rawSample });
 }
 
 // ===== 查看指定会话的完整消息（管理员查阅） =====

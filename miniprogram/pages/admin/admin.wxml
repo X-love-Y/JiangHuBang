@@ -55,7 +55,7 @@
 
   <!-- ===== 聊天 ===== -->
   <block wx:if="{{tab === 'chat'}}">
-    <view class="glass-card fade-up admin-card"
+    <view class="glass-card fade-up admin-card" wx:for="{{list}}" wx:key="conversationId"
       hover-class="chat-card--active" data-id="{{item.conversationId}}" bindtap="openChat">
       <view class="admin-card__top">
         <text class="admin-card__title ellipsis">{{item.commissionTitle}}</text>

@@ -10,6 +10,7 @@
           <view wx:else class="msg-avatar msg-avatar--placeholder">{{item.name[0]}}</view>
         </view>
         <view class="msg-bubble-wrap">
+          <view class="msg-sender" wx:if="{{adminMode}}">{{item.name}}</view>
           <view class="msg-bubble" wx:if="{{item.type === 'text'}}" user-select>{{item.text}}</view>
           <image wx:if="{{item.type === 'image'}}" class="msg-img" src="{{item.mediaUrl}}" mode="widthFix"
             data-url="{{item.mediaUrl}}" bindtap="previewMsgImage" />
@@ -70,8 +71,11 @@
     </view>
   </view>
 
-  <!-- 输入栏 -->
-  <view class="input-bar">
+  <!-- 管理员只读横幅 -->
+  <view class="admin-banner" wx:if="{{adminMode}}">🛡️ 管理员视角 · 只读查看，不可发送消息</view>
+
+  <!-- 输入栏（管理员模式隐藏） -->
+  <view class="input-bar" wx:if="{{!adminMode}}">
     <!-- 键盘/语音切换 -->
     <view class="input-bar__btn" hover-class="input-bar__btn--active" bindtap="toggleInputMode">
       {{inputMode === 'text' ? '🎤' : '⌨️'}}
