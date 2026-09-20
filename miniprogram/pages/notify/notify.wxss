@@ -3,7 +3,6 @@
   padding-bottom: 60rpx;
 }
 .notify-card {
-  margin-bottom: 20rpx;
   position: relative;
 }
 .notify-card--unread {

@@ -25,6 +25,15 @@
   box-sizing: border-box;
 }
 
+/* ===== 卡片堆叠间距 =====
+ * 页面内相邻的两张卡片自动保持统一间距（--card-gap），
+ * 避免出现「上面卡片有间距、下面卡片贴在一起」的不一致。
+ * 只作用于页面顶层的卡片：网格/列表容器（.cards / .orders / .goods 等自带 gap）
+ * 与卡片内部元素都不受影响。 */
+.page-container > .glass-card + .glass-card {
+  margin-top: var(--card-gap);
+}
+
 /* ===== 胶囊按钮 ===== */
 .pill-btn {
   display: flex;

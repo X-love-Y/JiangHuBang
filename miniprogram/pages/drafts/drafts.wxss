@@ -7,7 +7,6 @@
   display: flex;
   flex-direction: column;
   gap: 14rpx;
-  margin-bottom: 24rpx;
 }
 .draft-card__top {
   display: flex;
@@ -110,7 +109,6 @@
 
 /* 链卡片 */
 .chain-card {
-  margin-bottom: 24rpx;
   display: flex;
   flex-direction: column;
   gap: 8rpx;
@@ -210,7 +208,6 @@
 
 /* 历史链 */
 .history-card {
-  margin-bottom: 24rpx;
   display: flex;
   flex-direction: column;
   gap: 12rpx;
